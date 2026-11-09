@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>졸업요건 챗봇</title>
+<style>:root {
+  --bg: #f5f6fa; --card: #ffffff; --ink: #1c2230; --muted: #667085; --line: #e3e6ee;
+  --brand: #2f5bea; --brand-ink: #ffffff; --brand-soft: #e8eeff;
+  --ok: #12805c; --ok-soft: #e3f6ee; --bad: #c0392b; --bad-soft: #fdeceb; --warn-soft: #fff6e0;
+  --bubble-user: #2f5bea; --bubble-bot: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151c; --card: #1b1f29; --ink: #e8ebf2; --muted: #98a2b3; --line: #2b3140;
+    --brand: #6b8cff; --brand-ink: #0c1020; --brand-soft: #232c4a;
+    --ok: #4cd1a1; --ok-soft: #14332a; --bad: #ff8a7a; --bad-soft: #3a1f1c; --warn-soft: #3a3016;
+    --bubble-user: #3d5fd9; --bubble-bot: #1b1f29;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; }
+.app { max-width: 860px; margin: 0 auto; padding: 16px; }
+.top { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+h1 { font-size: 22px; margin: 0; }
+h2 { font-size: 16px; margin: 0 0 10px; }
+h3 { font-size: 13px; margin: 14px 0 6px; color: var(--muted); }
+.sub { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.profile { display: flex; gap: 8px; flex-wrap: wrap; }
+.profile label { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+select, input[type=text], input[type=number], textarea {
+  font: inherit; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; width: 100%;
+}
+.profile select { width: auto; min-width: 120px; }
+textarea { resize: vertical; }
+button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 7px 12px; }
+button:hover { border-color: var(--brand); }
+.tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.tab { border: 0; border-bottom: 3px solid transparent; border-radius: 0; background: none; padding: 9px 12px; color: var(--muted); }
+.tab.active { color: var(--brand); border-bottom-color: var(--brand); font-weight: 600; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+.hint { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+.badge { font-size: 11px; font-weight: 500; background: var(--brand-soft); color: var(--brand); border-radius: 99px; padding: 2px 8px; margin-left: 6px; }
+.link { border: 0; background: none; color: var(--brand); padding: 0 4px; font-size: 12px; }
+.notice { background: var(--warn-soft); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+code { background: var(--brand-soft); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+
+/* chat */
+.log { display: flex; flex-direction: column; gap: 10px; min-height: 280px; max-height: 58vh; overflow-y: auto; padding: 4px 2px 10px; }
+.msg { max-width: 92%; padding: 10px 14px; border-radius: 14px; word-break: keep-all; overflow-wrap: anywhere; }
+.msg.user { align-self: flex-end; background: var(--bubble-user); color: #fff; border-bottom-right-radius: 4px; }
+.msg.bot { align-self: flex-start; background: var(--bubble-bot); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg p { margin: 0 0 6px; }
+.msg ul { margin: 4px 0 6px; padding-left: 20px; }
+.lead { font-weight: 600; }
+.src { margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--bg); }
+.src-title { font-size: 13px; font-weight: 600; }
+.src-meta { font-size: 12px; color: var(--muted); }
+.src-body { font-size: 14px; margin-top: 4px; }
+.cta { margin-top: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.chips.inline { margin: 0 0 8px; }
+.chip { font-size: 13px; border-radius: 99px; padding: 4px 11px; background: var(--brand-soft); color: var(--brand); border: 0; }
+.chip.on { background: var(--brand); color: var(--brand-ink); }
+.composer { display: flex; gap: 8px; }
+.composer button { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); white-space: nowrap; }
+
+/* checker */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px 14px; }
+.row { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.row label { flex: 1; }
+.row input[type=number] { width: 80px; }
+.row small { color: var(--muted); }
+.result h2 { margin-bottom: 4px; }
+.verdict { border-radius: 10px; padding: 12px 14px; margin: 8px 0 12px; font-weight: 600; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.no { background: var(--bad-soft); color: var(--bad); }
+.cat { margin: 12px 0; }
+.cat-head { display: flex; justify-content: space-between; font-weight: 600; font-size: 14px; }
+.bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 4px 0 6px; }
+.bar > i { display: block; height: 100%; background: var(--brand); }
+.bar.done > i { background: var(--ok); }
+.lines { font-size: 13px; color: var(--muted); margin: 0; padding: 0; list-style: none; }
+.lines li { display: flex; gap: 6px; }
+.lines .miss { color: var(--bad); }
+.warn { background: var(--warn-soft); border-radius: 8px; padding: 8px 12px; font-size: 13px; margin: 6px 0; }
+
+.doclist { margin: 0; padding-left: 18px; font-size: 14px; }
+footer { color: var(--muted); font-size: 12px; margin: 18px 2px 8px; }
+details { margin-top: 10px; }
+details input, details textarea { margin: 6px 0; }
+@media (max-width: 520px) { .app { padding: 12px; } .msg { max-width: 100%; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>🎓 졸업요건 챗봇</h1>
+      <p class="sub">SW융합대학 다면적졸업인증제 · 문서 기반(RAG) 질의응답 + 졸업 충족 판정</p>
+    </div>
+    <div class="profile">
+      <label>학과 <select id="pDept"></select></label>
+      <label>학번 <select id="pYear"></select></label>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="chat" role="tab">💬 질문하기</button>
+    <button class="tab" data-tab="check" role="tab">✅ 졸업 판정</button>
+    <button class="tab" data-tab="docs" role="tab">📄 문서</button>
+  </nav>
+
+  <!-- 1. 챗봇 -->
+  <main id="tab-chat" class="panel active">
+    <div id="log" class="log" aria-live="polite"></div>
+    <div id="chips" class="chips"></div>
+    <form id="chatForm" class="composer">
+      <input id="q" type="text" autocomplete="off" placeholder="예) 2022학번 컴퓨터소프트웨어공학과 졸업 총점은?">
+      <button type="submit">보내기</button>
+    </form>
+  </main>
+
+  <!-- 2. 졸업 판정 -->
+  <main id="tab-check" class="panel">
+    <div id="checkUnsupported" class="notice" hidden></div>
+    <div id="checkBody">
+      <section class="card">
+        <h2>① 대학공통 필수 이수 항목 <button class="link" id="allCommon" type="button">모두 이수</button> <button class="link" id="noCommon" type="button">모두 해제</button></h2>
+        <div id="commonBox" class="grid2"></div>
+      </section>
+      <section class="card">
+        <h2>② 수강한 과목 리스트</h2>
+        <p class="hint">한 줄에 한 과목(또는 쉼표로 구분)으로 붙여넣으세요. 아래 버튼을 누르면 과목이 추가/삭제됩니다.</p>
+        <div id="courseChips" class="chips inline"></div>
+        <textarea id="courses" rows="5" placeholder="캡스톤디자인&#10;전공영어기초&#10;예비창업설계"></textarea>
+      </section>
+      <section class="card">
+        <h2>③ 참여한 비교과 활동</h2>
+        <h3>비교과 지정</h3>
+        <div id="desigBox" class="grid2"></div>
+        <h3>비교과 미지정</h3>
+        <div id="freeBox" class="grid2"></div>
+      </section>
+      <section id="result" class="card result"></section>
+    </div>
+  </main>
+
+  <!-- 3. 문서 -->
+  <main id="tab-docs" class="panel">
+    <section class="card">
+      <h2>기본 탑재 문서</h2>
+      <ul id="docList" class="doclist"></ul>
+    </section>
+    <section class="card">
+      <h2>안내 문서 추가하기 <span class="badge">내 브라우저에서만 사용</span></h2>
+      <p class="hint">PDF·TXT·MD 파일을 추가하면 챗봇이 함께 검색합니다. 파일은 서버로 올라가지 않으며, 새로고침하면 사라집니다.
+        영구 반영은 README의 <code>docs/</code> 폴더 + <code>python3 build.py</code> 방법을 쓰세요.</p>
+      <input id="file" type="file" accept=".pdf,.txt,.md" multiple>
+      <details>
+        <summary>텍스트 직접 붙여넣기</summary>
+        <input id="pasteName" type="text" placeholder="문서 이름 (예: 졸업사정 공지)">
+        <textarea id="pasteText" rows="5" placeholder="안내 문서 내용을 붙여넣으세요"></textarea>
+        <button id="pasteAdd" type="button">추가</button>
+      </details>
+      <div id="addedMsg" class="hint"></div>
+    </section>
+  </main>
+
+  <footer>
+    ⚠️ 이 도구는 학과 기준 PDF를 바탕으로 한 <b>참고용</b>입니다. 최종 확인은 차세대 종합정보시스템 → 개인별졸업진도관리 또는 多Dream비교과센터(향설 1관 RC306호)에서 하세요.
+  </footer>
+</div>
+
+<script>const KB = [{"title": "대학공통 필수 (2019~2022학번)", "text": "대학공통 필수 45점 (2019~2022학번 기준, 모든 학과 공통)\n- 소통하는 공감인재: 인간사랑(5), ASP(1,2학기)(5), 자기주도상담(5)\n- 융합하는 창의인재: 자기개발과 전공탐색(5), 졸업필수활동(15)\n- 공헌하는 글로벌인재: 현대기본영어(5), 봉사학습(5)\n- 합계 45점", "dept": "common", "years": [2019, 2022], "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "대학공통 필수 (2023학번)", "text": "대학공통 필수 45점 (2023학번 기준, 모든 학과 공통)\n- 소통하는 공감인재: 인간사랑(5), ASP(1,2학기)(5), 자기주도상담(5)\n- 융합하는 창의인재: 자기개발과 전공탐색(M&M)(5), 졸업종합지도(15)\n- 공헌하는 글로벌인재: 현대기본영어(5), 봉사학습(5)\n- 합계 45점", "dept": "common", "years": [2023, 2023], "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "대학공통 필수 (2024~2026학번)", "text": "대학공통 필수 45점 (2024~2026학번 기준, 모든 학과 공통)\n- 소통하는 공감인재: 인간사랑(5), ASP(1,2학기)(5), 자기주도상담(5)\n- 융합하는 창의인재: 자기개발과 전공탐색(M&M)(5), 졸업및취·창업지도(13), 학습윤리-기본(1), 학습윤리-심화(1)\n- 공헌하는 글로벌인재: 현대실용영어(5), 봉사학습(5)\n- 합계 45점", "dept": "common", "years": [2024, 2026], "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "컴퓨터소프트웨어공학과 2016~2020학번 졸업요건", "text": "SW융합대학 컴퓨터소프트웨어공학과 2016~2020학번 졸업 기준: 합계 90점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 14 + 비교과미지정 6\n- 교과(25점): 캡스톤디자인1(5), 캡스톤디자인2(5), 전공영어1~4 중 택3(15)\n- 비교과 지정(14점): 전공상담(4), 학술제 발표(10)\n- 비교과 미지정(6점): 비교과자율활동(6) (학과활동 포함)\n- 전공영어1~4 중 택3을 수강하지 못한 경우 전공영어기초, 전공영어응용, 예비창업설계를 수강하면 대체 과목으로 인정\n- 점수 기준: 전공상담(회당 1점), 학과활동(회당 1점), 학과MT참여(회당 2점), TOPCIT 응시(회당 1점)", "dept": "cse", "years": [2016, 2020], "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "컴퓨터소프트웨어공학과 2021학번 졸업요건", "text": "SW융합대학 컴퓨터소프트웨어공학과 2021학번 졸업 기준: 합계 90점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 15 + 비교과미지정 5\n- 교과(25점): 캡스톤디자인1(5), 캡스톤디자인2(5), 전공영어1~4 중 택3(15)\n- 비교과 지정(15점): 전공상담(4), 학과활동(1) (4학년 간담회 참석), 학술제 발표(10)\n- 비교과 미지정(5점): 비교과자율활동(5)\n- 전공영어1~4 중 택3을 수강하지 못한 경우 전공영어기초, 전공영어응용, 예비창업설계를 수강하면 대체 과목으로 인정\n- 점수 기준: 전공상담(회당 1점), 학과활동(회당 1점), 학과MT참여(회당 2점), TOPCIT 응시(회당 1점)", "dept": "cse", "years": [2021, 2021], "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "컴퓨터소프트웨어공학과 2022~2024학번 졸업요건", "text": "SW융합대학 컴퓨터소프트웨어공학과 2022~2024학번 졸업 기준: 합계 104점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 24 + 비교과미지정 10\n- 교과(25점): 캡스톤디자인(5), 산학캡스톤디자인(5), 전공영어기초(5), 전공영어응용(5), 예비창업설계(5)\n- 비교과 지정(24점): 전공상담(4), 학술제발표(10), 코딩역량인증제 Level2 이상(5), AI·SW전공역량졸업인증제(5)\n- 비교과 미지정(10점): 비교과자율활동(10) — 맛있는SW시리즈, TOPCIT 응시 등\n- 점수 기준: 전공상담(회당 1점), 학과활동(회당 1점), 학과MT참여(회당 2점), TOPCIT 응시(회당 1점)", "dept": "cse", "years": [2022, 2024], "page": 2, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "컴퓨터소프트웨어공학과 2025~2026학번 졸업요건", "text": "SW융합대학 컴퓨터소프트웨어공학과 2025~2026학번 졸업 기준: 합계 104점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 24 + 비교과미지정 10\n- 교과(25점): 캡스톤디자인(5), 산학캡스톤디자인(5), 전공영어기초(5), 전공영어응용(5), 예비창업설계(5)\n- 비교과 지정(24점): 전공상담(4), 학과 MT참여(4), 학술제발표(6), 코딩역량인증제 Level2 이상(5), AI·SW전공역량졸업인증제(5)\n- 비교과 미지정(10점): 비교과자율활동(10) — 맛있는SW시리즈, TOPCIT 응시 등\n- 점수 기준: 전공상담(회당 1점), 학과활동(회당 1점), 학과MT참여(회당 2점), TOPCIT 응시(회당 1점)\n- 2022~2024학번과의 차이: 학과 MT참여(4)가 지정 항목에 추가되었고 학술제발표는 10점에서 6점으로 변경", "dept": "cse", "years": [2025, 2026], "page": 2, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "정보보호학과 2016~2021학번 졸업요건", "text": "SW융합대학 정보보호학과 2016~2021학번 졸업 기준: 합계 85점\n- 구성: 대학공통 45 + 교과 15 + 비교과지정 20 + 비교과미지정 5\n- 교과(15점): 캡스톤디자인3~4 택1(5), 전공영어기초(5), 전공영어응용(5)\n- 비교과 지정(20점): 학과활동(10), (단과대)학술제발표(10)\n- 비교과 미지정(5점): 비교과자율활동(5)\n- 2016~2021학번 중 전공영어1, 전공영어2를 수강하지 못했다면 전공영어1, 전공영어2, 전공영어3, 전공영어기초2, 전공영어응용 중 택2로 대체\n- 점수 기준: 학과활동(회당 1점), 학과학술동아리(학기당 3점), TOPCIT 응시(회당 1점)", "dept": "infosec", "years": [2016, 2021], "page": 3, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "정보보호학과 2022학번 졸업요건", "text": "SW융합대학 정보보호학과 2022학번 졸업 기준: 합계 110점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 30 + 비교과미지정 10\n- 교과(25점): 산학캡스톤디자인2 혹은 졸업논문프로젝트2 택1(5), C프로그래밍(5), 전공영어기초(5), 전공영어응용(5), 예비창업설계(5)\n- 비교과 지정(30점): 학과활동(10), (단과대)학술제발표(10), 코딩역량인증제(5), AI·SW전공역량졸업인증제(5)\n- 비교과 미지정(10점): 비교과자율활동(10) — 맛있는SW(5), 학과학술동아리\n- 점수 기준: 학과활동(회당 1점), 학과학술동아리(학기당 3점), TOPCIT 응시(회당 1점)", "dept": "infosec", "years": [2022, 2022], "page": 3, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "정보보호학과 2023~2026학번 졸업요건", "text": "SW융합대학 정보보호학과 2023~2026학번 졸업 기준: 합계 110점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 30 + 비교과미지정 10\n- 교과(25점): 산학캡스톤디자인2 혹은 졸업논문프로젝트2 택1(5), C프로그래밍(5), 전공영어기초(5), 전공영어응용(5), 예비창업설계(5)\n- 비교과 지정(30점): 학과활동(10), (단과대)학술제발표(5), 코딩역량인증제(5), AI·SW전공역량졸업인증제(5), TOPCIT 응시(5)\n- 비교과 미지정(10점): 비교과자율활동(10) — 맛있는SW(5), 학과학술동아리\n- 점수 기준: 학과활동(회당 1점), 학과학술동아리(학기당 3점), TOPCIT 응시(회당 1점)", "dept": "infosec", "years": [2023, 2026], "page": 3, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "의료IT공학과 2021학번 졸업요건", "text": "SW융합대학 의료IT공학과 2021학번 졸업 기준: 합계 80점\n- 구성: 대학공통 45 + 교과 15 + 비교과지정 6 + 비교과미지정 14\n- 교과(15점): 의학용어(5), 프레젠테이션테크닉(5), 현대응용영어(5)\n- 비교과 지정(6점): 학과 MT(1), 학술제참여(1), 전공관련국제박람회(2), 진로(취업)지도관련 학내 프로그램 참여(2)\n- 비교과 미지정(14점): 비교과자율활동(7) + 비교과자율활동(7)", "dept": "medit", "years": [2021, 2021], "page": 4, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "의료IT공학과 2022~2023학번 졸업요건", "text": "SW융합대학 의료IT공학과 2022~2023학번 졸업 기준: 합계 88점\n- 구성: 대학공통 45 + 교과 15 + 비교과지정 13 + 비교과미지정 15\n- 교과(15점): 의학용어(5), 컴퓨팅적사고와문제해결(5), 현대응용영어(5)\n- 비교과 지정(13점): MT참여 2회(2), 학술제 참여(1), 코딩역량인증 평가 Level2 이상(5), AI·SW전공역량 졸업인증제 200점 이상(5)\n- 비교과 미지정(15점): 비교과자율활동(5) ×3 — 전공관련 국제박람회(2), 학술제 작품발표(단과대)(2), 맛있는SW(5) 등", "dept": "medit", "years": [2022, 2023], "page": 4, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "의료IT공학과 2024~2026학번 졸업요건", "text": "SW융합대학 의료IT공학과 2024~2026학번 졸업 기준: 합계 89점\n- 구성: 대학공통 45 + 교과 15 + 비교과지정 14 + 비교과미지정 15\n- 교과(15점): 의학용어(5), 컴퓨터코딩과문제해결(5), 현대응용영어(5)\n- 비교과 지정(14점): MT참여 2회(2), 학술제 참여(1), 코딩역량인증 평가 Level2 이상(5), AI·SW전공역량 졸업인증제 200점 이상(5), TOPCIT 수준1 달성(1)\n- 비교과 미지정(15점): 비교과자율활동(5) ×3 — 전공관련 국제박람회(2), 학술제 작품발표(단과대)(2), 맛있는SW(5) 등", "dept": "medit", "years": [2024, 2026], "page": 4, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "AI·빅데이터학과 2019~2021학번 졸업요건", "text": "SW융합대학 AI·빅데이터학과 2019~2021학번 졸업 기준: 합계 80점\n- 구성: 대학공통 45 + 교과 5 + 비교과지정 11 + 비교과미지정 19\n- 교과(5점): 중핵교양-국제사회언어영역 과목 택1(5)\n- 비교과 지정(11점): 학과활동(5), 자격증/경진대회참가/경진대회수상(6)\n- 비교과 미지정(19점): 비교과자율활동(5) + 비교과자율활동(4) + 비교과자율활동(10)\n- 점수 기준: 학과활동(회당 1점), TOPCIT 응시(회당 1점), 경진대회 참가(3~10점), 경진대회 수상(10~30점)\n- 권장 자격증 취득(6점): 데이터아키텍처 전문가 / SQL전문가 / SQL개발자 / 데이터분석전문가 / 데이터분석준전문가 / 빅데이터분석기사", "dept": "aibd", "years": [2019, 2021], "page": 5, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "AI·빅데이터학과 2022학번 졸업요건", "text": "SW융합대학 AI·빅데이터학과 2022학번 졸업 기준: 합계 95점\n- 구성: 대학공통 45 + 교과 10 + 비교과지정 21 + 비교과미지정 19\n- 교과(10점): 예비창업설계(5), 중핵교양-국제사회언어영역 과목 택1(5)\n- 비교과 지정(21점): 학과활동(5), 자격증/경진대회참가/경진대회수상(6), 코딩역량인증제 Lv2이상(5), AI·SW전공역량졸업인증제(5)\n- 비교과 미지정(19점): 비교과자율활동(5) + (4) + (10)\n- 점수 기준: 학과활동(회당 1점), 경진대회 참가(3~10점), 경진대회 수상(10~30점)\n- 권장수강학기: 예비창업설계(2학년 2학기)", "dept": "aibd", "years": [2022, 2022], "page": 5, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "AI·빅데이터학과 2023~2026학번 졸업요건", "text": "SW융합대학 AI·빅데이터학과 2023~2026학번 졸업 기준: 합계 95점\n- 구성: 대학공통 45 + 교과 5 + 비교과지정 26 + 비교과미지정 19\n- 교과(5점): 예비창업설계(5)\n- 비교과 지정(26점): 학과활동(5), 자격증/경진대회참가/경진대회수상(6), 코딩역량인증제 Lv2이상(5), AI·SW전공역량졸업인증제(5), TOPCIT 응시(5)\n- 비교과 미지정(19점): 비교과자율활동(5) + (4) + (10)\n- 점수 기준: 학과활동(회당 1점), TOPCIT 응시(회당 1점), 경진대회 참가(3~10점), 경진대회 수상(10~30점)\n- 권장 자격증 취득(6점): 데이터아키텍처 전문가 / SQL전문가 / SQL개발자 / 데이터분석전문가 / 데이터분석준전문가 / 빅데이터분석기사\n- 권장수강학기: 예비창업설계(2학년 2학기)", "dept": "aibd", "years": [2023, 2026], "page": 5, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "사물인터넷학과 2017~2018학번 졸업요건", "text": "SW융합대학 사물인터넷학과 2017~2018학번 졸업 기준: 합계 80점\n- 구성: 대학공통 45 + 교과 10 + 비교과지정 10 + 비교과미지정 15\n- 교과(10점): 캡스톤디자인 2과목 이상(10)\n- 비교과 지정(10점): 지도교수상담(3), 졸업상담(2), 학과활동(5)\n- 비교과 미지정(15점): 비교과자율활동(15) — 토익 500점 이상(5) / OPIC M1 이상(5) / 토익스피킹 100점 이상(5)\n- 점수 기준: 지도교수상담·졸업상담(회당 1점), 학과활동(회당 1점), TOPCIT 응시(회당 1점)", "dept": "iot", "years": [2017, 2018], "page": 6, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "사물인터넷학과 2019~2021학번 졸업요건", "text": "SW융합대학 사물인터넷학과 2019~2021학번 졸업 기준: 합계 80점\n- 구성: 대학공통 45 + 교과 15 + 비교과지정 10 + 비교과미지정 10\n- 교과(15점): 캡스톤디자인 2과목 이상(10), 중핵교양 국제사회언어영역 '영어' 교과목 이수(5)\n- 비교과 지정(10점): 지도교수상담(3), 졸업상담(2), 학과활동(5)\n- 비교과 미지정(10점): 비교과자율활동(10) — 토익 500점 이상(5) / OPIC M1 이상(5) / 토익스피킹 100점 이상(5)\n- 점수 기준: 지도교수상담·졸업상담(회당 1점), 학과활동(회당 1점), TOPCIT 응시(회당 1점)", "dept": "iot", "years": [2019, 2021], "page": 6, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "사물인터넷학과 2022학번 졸업요건", "text": "SW융합대학 사물인터넷학과 2022학번 졸업 기준: 합계 80점\n- 구성: 대학공통 45 + 교과 5 + 비교과지정 20 + 비교과미지정 10\n- 교과(5점): 예비창업설계(5)\n- 비교과 지정(20점): 지도교수상담(3), 졸업상담(2), 학과활동(5), 코딩역량인증제 Lv2이상(5), AI·SW전공역량 졸업인증제(5)\n- 비교과 미지정(10점): 비교과자율활동(5) + 비교과자율활동(5) — 맛있는SW(5), 토익 500점 이상 / OPIC M1 이상 / 토익스피킹 100점 이상\n- 권장수강학기: 예비창업설계(2학년 1학기)", "dept": "iot", "years": [2022, 2022], "page": 6, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "사물인터넷학과 2023학번 졸업요건", "text": "SW융합대학 사물인터넷학과 2023학번 졸업 기준: 합계 81점\n- 구성: 대학공통 45 + 교과 5 + 비교과지정 21 + 비교과미지정 10\n- 교과(5점): 예비창업설계(5)\n- 비교과 지정(21점): 지도교수상담 3회(3), 졸업상담 2회(2), 학과활동 5회(5), TOPCIT 응시(1), 코딩역량인증제 Lv2이상(5), AI·SW전공역량 졸업인증제(5)\n- 비교과 미지정(10점): 비교과자율활동(5) + 비교과자율활동(5) — 맛있는SW(5), 공인어학점수\n- 권장수강학기: 예비창업설계(2학년 1학기)", "dept": "iot", "years": [2023, 2023], "page": 7, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "사물인터넷학과 2024학번 졸업요건", "text": "SW융합대학 사물인터넷학과 2024학번 졸업 기준: 합계 81점\n- 구성: 대학공통 45 + 교과 5 + 비교과지정 18 + 비교과미지정 13\n- 교과(5점): 예비창업설계(5)\n- 비교과 지정(18점): 지도교수상담 2회(2), 학과활동 5회(5), TOPCIT 응시(1), 코딩역량인증제 Lv2이상(5), AI·SW전공역량 졸업인증제(5)\n- 비교과 미지정(13점): 비교과자율활동(8) + 공인어학점수(5) — 맛있는SW(5), 정보처리기사 응시(2) / 취득(10), ADsP 취득(5), SQLD 취득(5)\n- 권장수강학기: 예비창업설계(2학년 1학기)", "dept": "iot", "years": [2024, 2024], "page": 7, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "사물인터넷학과 2025~2026학번 졸업요건", "text": "SW융합대학 사물인터넷학과 2025~2026학번 졸업 기준: 합계 84점\n- 구성: 대학공통 45 + 교과 5 + 비교과지정 21 + 비교과미지정 13\n- 교과(5점): 예비창업설계(5)\n- 비교과 지정(21점): 진로 및 취업상담 2회(2), 학과활동 5회(5), TOPCIT 응시(4), 코딩역량인증제 Lv2이상(5), AI·SW전공역량 졸업인증제(5)\n- 비교과 미지정(13점): 비교과자율활동(8) + 공인어학점수(5) — 맛있는SW(5), 정보처리기사 응시(2) / 취득(10), ADsP 취득(5), SQLD 취득(5)\n- 권장수강학기: 예비창업설계(2학년 1학기)", "dept": "iot", "years": [2025, 2026], "page": 7, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "메타버스&게임학과 2023~2025학번 졸업요건", "text": "SW융합대학 메타버스&게임학과 2023~2025학번 졸업 기준: 합계 110점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 30 + 비교과미지정 10\n- 교과(25점): 산학캡스톤디자인(5), 졸업논문프로젝트(5), 전공영어기초(5), 전공영어응용(5), 예비창업설계(5)\n- 비교과 지정(30점): 전공상담(5), (단과대)학술제발표(10), 코딩역량인증제 Lv2↑(5), AI·SW전공역량졸업인증제(5), TOPCIT(5)\n- 비교과 미지정(10점): 비교과자율활동(5) + 비교과자율활동(5) — 학과활동, 추천: 맛있는SW(5)\n- 점수 기준: 전공상담(회당 1점), 학과활동(회당 1점), TOPCIT은 수준별 점수 부여", "dept": "meta", "years": [2023, 2025], "page": 8, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "메타버스&게임학과 2026학번 졸업요건", "text": "SW융합대학 메타버스&게임학과 2026학번 졸업 기준: 합계 110점\n- 구성: 대학공통 45 + 교과 25 + 비교과지정 25 + 비교과미지정 15\n- 교과(25점): 산학캡스톤디자인(5), 졸업논문프로젝트(5), 전공영어기초(5), 전공영어응용(5), 예비창업설계(5)\n- 비교과 지정(25점): 전공상담(5), (단과대)학술제발표(10), 코딩역량인증제 Lv2이상(5), AI·SW전공역량졸업인증제(5)\n- 비교과 미지정(15점): 비교과자율활동(5) + 비교과자율활동(10) — 학과활동, 추천: 맛있는SW시리즈(5), 추천: TOPCIT 응시(5)\n- 점수 기준: 전공상담(회당 1점), 학과활동(회당 1점), TOPCIT은 수준별 점수 부여", "dept": "meta", "years": [2026, 2026], "page": 8, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "TOPCIT 수준별 점수 (메타버스&게임학과)", "text": "메타버스&게임학과 TOPCIT 수준별 점수 (TOPCIT 점수 구간 → 창의 점수)\n- 수준1(입문형) 0~149점 → 창의(1)\n- 수준2(도전형) 150~399점 → 창의(2)\n- 수준3(능숙형) 400~649점 → 창의(4)\n- 수준4(문제해결형) 650~849점 → 창의(5)\n- 수준5(창의융합형) 850~1000점 → 창의(7)\nTOPCIT(5점) 세부 배점 기준\n- 1) 응시 5회\n- 2) 응시 3회 + TOPCIT Lv2 달성\n- 3) 응시 1회 + TOPCIT Lv3 달성\n- 4) TOPCIT Lv4 달성", "dept": "meta", "years": [2023, 2026], "page": 8, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "비교과 신청 및 이수내역 확인 방법", "text": "비교과 신청과 이수내역 확인은 차세대 종합정보시스템(https://st.sch.ac.kr)에서 합니다.\n1. 비교과 신청: 학부학사행정 → 비교과과정 → 신청관리 → 비교과신청\n2. 이수내역 확인: 학부학사행정 → 졸업 → 개인별졸업진도관리 → 비교과일람표", "dept": "common", "years": null, "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "다면적졸업인증제 상담 문의처", "text": "다면적졸업인증제에 대한 자세한 상담이 필요한 학생은 多Dream비교과센터(향설 1관 RC306호)로 방문하세요.\n문의 상담 위치 연락 어디 센터 담당 부서 방문 장소", "dept": "common", "years": null, "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}, {"title": "다면적졸업인증제 구성 (점수 체계)", "text": "다면적졸업인증제 총점은 크게 네 부분으로 구성됩니다.\n- 대학공통 필수(45점): 모든 학과 공통\n- 교과: 학과가 지정한 교과목 이수 점수\n- 비교과 지정: 학과가 지정한 비교과 활동(전공상담, 학술제발표, 코딩역량인증제, AI·SW전공역량졸업인증제 등)\n- 비교과 미지정: 비교과자율활동 점수(맛있는SW시리즈, TOPCIT 응시 등)\n학과별 합계 점수는 학과·학번에 따라 다릅니다. 학과와 학번을 함께 질문해 주세요.", "dept": "common", "years": null, "page": 1, "source": "2026년도 학과기준 디자인 시안(1차 시안-SW융합대학).pdf"}];</script>
+<script>/* ============================================================
+ * engine.js — 브라우저 안에서 도는 RAG 검색기 (BM25, 외부 API 없음)
+ *   1) 문서를 chunk 로 나눠 색인
+ *   2) 질문에서 학과·학번을 읽어 후보를 거른다(metadata filtering)
+ *   3) 한글 2글자 조각 + 단어 BM25 로 순위를 매긴다
+ *   4) 근거 chunk 를 그대로 보여준다 (생성형 환각 없음)
+ * ============================================================ */
+
+const DEPTS = {
+  cse: '컴퓨터소프트웨어공학과',
+  infosec: '정보보호학과',
+  medit: '의료IT공학과',
+  aibd: 'AI·빅데이터학과',
+  iot: '사물인터넷학과',
+  meta: '메타버스&게임학과',
+};
+
+const DEPT_PATTERNS = {
+  cse: /컴퓨터\s*소프트웨어(공학)?|컴소공|컴소|소프트웨어공학/,
+  infosec: /정보\s*보호|정보보안/,
+  medit: /의료\s*it|의료\s*아이티|의료it공학/i,
+  aibd: /ai\s*[·.\-ㆍ]?\s*빅\s*데이터|빅데이터\s*학과|에이아이/i,
+  iot: /사물\s*인터넷|iot/i,
+  meta: /메타\s*버스|게임\s*학과|메타버스\s*&\s*게임/,
+};
+
+function detectDept(q) {
+  for (const [id, re] of Object.entries(DEPT_PATTERNS)) if (re.test(q)) return id;
+  return null;
+}
+
+function detectYear(q) {
+  let m = q.match(/(20\d{2})\s*(학번|년\s*입학|입학)/);
+  if (m) return +m[1];
+  m = q.match(/(?<!\d)(\d{2})\s*학번/);
+  if (m) return 2000 + +m[1];
+  m = q.match(/(20\d{2})/);
+  return m ? +m[1] : null;
+}
+
+// 질문에 흔히 붙는 군더더기 (검색 신호가 아님)
+const FILLER = new Set(['가요','돼요','되나','되나요','있나','있나요','알려','려줘','줘요','주세','세요','뭐','뭔가','어떻','어떻게','하나','하나요','할까','얼마','필요','요건','해야','야해','게해','뭐야']);
+
+const KO_SUFFIX = /(이란|이야|인가요|인가|나요|가요|어요|해요|해줘|알려줘|알려주세요|뭐야|뭐예요|입니까|이에요|예요|에서|으로|까지|부터|이|가|은|는|을|를|의|에|로|와|과|도|만)$/;
+
+function tokenize(text) {
+  const words = String(text).toLowerCase().match(/[가-힣]+|[a-z0-9]+/g) || [];
+  const out = [];
+  for (let w of words) {
+    if (/^[가-힣]+$/.test(w)) {
+      if (w.length >= 3) w = w.replace(KO_SUFFIX, '') || w;
+      if (w.length === 1) { out.push(w); continue; }
+      for (let i = 0; i < w.length - 1; i++) out.push(w.slice(i, i + 2));
+      if (w.length >= 3) out.push(w);
+    } else out.push(w);
+  }
+  return out;
+}
+
+class Retriever {
+  constructor(chunks) { this.setChunks(chunks); }
+
+  setChunks(chunks) {
+    this.chunks = chunks;
+    this.docs = chunks.map(c => tokenize(`${c.title} ${c.title} ${c.text}`));
+    this.avgLen = this.docs.reduce((a, d) => a + d.length, 0) / Math.max(1, this.docs.length);
+    this.df = new Map();
+    this.tf = this.docs.map(d => {
+      const m = new Map();
+      for (const t of d) m.set(t, (m.get(t) || 0) + 1);
+      for (const t of m.keys()) this.df.set(t, (this.df.get(t) || 0) + 1);
+      return m;
+    });
+  }
+
+  bm25(qTokens, i) {
+    const N = this.chunks.length, k1 = 1.4, b = 0.75;
+    const len = this.docs[i].length;
+    let s = 0;
+    for (const t of new Set(qTokens)) {
+      const f = this.tf[i].get(t);
+      if (!f) continue;
+      const n = this.df.get(t);
+      const idf = Math.log(1 + (N - n + 0.5) / (n + 0.5));
+      s += idf * (f * (k1 + 1)) / (f + k1 * (1 - b + b * len / this.avgLen));
+    }
+    return s;
+  }
+
+  /**
+   * @param {string} question
+   * @param {{dept?:string, year?:number}} profile 화면 상단에서 고른 기본 학과/학번
+   */
+  search(question, profile = {}, topK = 3) {
+    const askedDept = detectDept(question);
+    const askedYear = detectYear(question);
+    const dept = askedDept || profile.dept || null;
+    // 다른 학과를 물었는데 학번은 안 적었다면, 내 학번(프로필)을 그 학과에 억지로 적용하지 않는다
+    const otherDept = askedDept && profile.dept && askedDept !== profile.dept;
+    const year = askedYear || (otherDept ? null : profile.year) || null;
+
+    // 학과·학번 표현은 필터로 쓰고, 단어 매칭에서는 뺀다
+    const cleaned = question
+      .replace(/(20\d{2}|\d{2})\s*(학번|년\s*입학)/g, ' ')
+      .replace(new RegExp(Object.values(DEPT_PATTERNS).map(r => r.source).join('|'), 'gi'), ' ')
+      .replace(/학과/g, ' ')
+      .replace(/총\s*점수?|졸업\s*점수|필요(한|하)?\s*점수|기준\s*점수|몇\s*점|몇점/g, ' 합계 ');
+    const qTokens = tokenize(cleaned).filter(t => !FILLER.has(t));
+    const wantsGuide = /어디|문의|연락|위치|방문|센터|신청|확인\s*(방법|하는)/.test(question);
+
+    const scored = this.chunks.map((c, i) => {
+      const raw = this.bm25(qTokens, i);
+      let mult = 1;
+      if (wantsGuide && c.dept === 'common' && !c.years) mult *= 2; // 신청·문의 류 질문은 공통 안내 문서 우선
+      if (c.dept && c.dept !== 'common' && dept) mult *= c.dept === dept ? 1.5 : (askedDept ? 0.05 : 0.4);
+      if (c.years && year) {
+        const [a, b] = c.years;
+        mult *= year >= a && year <= b ? 1.6 : (askedYear ? 0.1 : 0.35);
+      }
+      return { chunk: c, raw, score: raw * mult };
+    }).filter(r => r.raw > 0).sort((a, b) => b.score - a.score);
+
+    const top = scored[0];
+    const results = top ? scored.filter(r => r.score >= top.score * 0.5).slice(0, topK) : [];
+    // 질문의 핵심 단어 중 1/3 이상이 근거 문서에 있어야 "찾았다"고 본다 (흔한 단어 하나만 겹친 경우 거절)
+    let coverage = 0;
+    if (top) {
+      const uniq = [...new Set(qTokens)];
+      const hit = uniq.filter(t => this.tf[this.chunks.indexOf(top.chunk)].has(t)).length;
+      coverage = uniq.length ? hit / uniq.length : 0;
+    }
+    const deptHit = !!askedDept && !!top && top.chunk.dept === askedDept; // 학과를 직접 지목하고 그 학과 문서가 나온 경우
+    const confident = !!top && coverage >= 0.34 && (top.raw >= 0.3 || deptHit);
+    const needYear = confident && !year && results.some(r => r.chunk.years);
+    return { results, dept, year, askedDept, askedYear, confident, coverage, needYear };
+  }
+}
+
+/** 청크를 "N~M학번" 같은 라벨로 */
+function yearLabel(years) {
+  if (!years) return '';
+  return years[0] === years[1] ? `${years[0]}학번` : `${years[0]}~${years[1]}학번`;
+}
+
+/** 업로드/붙여넣기 텍스트를 검색용 chunk 로 자른다 */
+function chunkPlainText(text, sourceName, page) {
+  const paras = text.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
+  const chunks = [];
+  let buf = '';
+  const flush = () => {
+    if (buf.trim()) chunks.push({
+      title: `${sourceName}${page ? ` p.${page}` : ''} (${chunks.length + 1})`,
+      text: buf.trim(), dept: null, years: null, page: page || null, source: sourceName, extra: true,
+    });
+    buf = '';
+  };
+  for (const p of paras) {
+    if ((buf + '\n' + p).length > 700) flush();
+    buf += (buf ? '\n' : '') + p;
+    while (buf.length > 1100) { chunks.push({ title: `${sourceName}${page ? ` p.${page}` : ''} (${chunks.length + 1})`, text: buf.slice(0, 900), dept: null, years: null, page: page || null, source: sourceName, extra: true }); buf = buf.slice(800); }
+  }
+  flush();
+  return chunks;
+}
+
+if (typeof module !== 'undefined') module.exports = { Retriever, tokenize, detectDept, detectYear, DEPTS, yearLabel, chunkPlainText };
+</script>
+<script>/* ============================================================
+ * checker.js — 졸업 충족 판정 (컴퓨터소프트웨어공학과 2016~2026학번)
+ * 기준: 「2026년도 학과기준 디자인 시안(1차 시안-SW융합대학)」 p.1~2
+ * 다른 학과를 추가하려면 CHECKER_GROUPS 에 같은 형식으로 그룹을 추가하면 됩니다.
+ * ============================================================ */
+
+const COMMON_TABLE = {
+  '2019-2022': [
+    ['인간사랑', 5], ['ASP(1,2학기)', 5], ['자기주도상담', 5],
+    ['자기개발과 전공탐색', 5], ['졸업필수활동', 15], ['현대기본영어', 5], ['봉사학습', 5],
+  ],
+  '2023-2023': [
+    ['인간사랑', 5], ['ASP(1,2학기)', 5], ['자기주도상담', 5],
+    ['자기개발과 전공탐색(M&M)', 5], ['졸업종합지도', 15], ['현대기본영어', 5], ['봉사학습', 5],
+  ],
+  '2024-2026': [
+    ['인간사랑', 5], ['ASP(1,2학기)', 5], ['자기주도상담', 5],
+    ['자기개발과 전공탐색(M&M)', 5], ['졸업및취·창업지도', 13],
+    ['학습윤리-기본', 1], ['학습윤리-심화', 1], ['현대실용영어', 5], ['봉사학습', 5],
+  ],
+};
+
+function commonKeyFor(year) {
+  if (year >= 2024) return '2024-2026';
+  if (year === 2023) return '2023-2023';
+  return '2019-2022'; // 2016~2018학번은 PDF에 표가 없어 2019~2022 기준을 준용
+}
+
+const _c = (id, label, pts, alias) => ({ id, label, pts, alias: alias || [label] });
+const _count = (id, label, per, max, hint) => ({ id, label, type: 'count', per, max, hint });
+const _flag = (id, label, pts, hint) => ({ id, label, type: 'flag', pts, hint });
+
+const ENG_MAIN = [
+  _c('eng1', '전공영어1', 5), _c('eng2', '전공영어2', 5),
+  _c('eng3', '전공영어3', 5), _c('eng4', '전공영어4', 5),
+];
+const ENG_SUB = [
+  _c('engBasic', '전공영어기초', 5), _c('engApply', '전공영어응용', 5), _c('startup', '예비창업설계', 5),
+];
+
+// 비교과 미지정 공통 입력(회당 점수는 PDF 각주 기준)
+const FREE_COMMON = [
+  _count('topcit', 'TOPCIT 응시', 1, 99, '회당 1점'),
+  _count('dept', '학과활동', 1, 99, '회당 1점'),
+  _flag_free(),
+];
+function _flag_free() {
+  return { id: 'free', label: '기타 비교과자율활동 점수 (맛있는SW시리즈 등)', type: 'number', hint: '직접 입력한 점수' };
+}
+const MT_FREE = _count('mt', '학과 MT 참여', 2, 99, '회당 2점');
+
+const CHECKER_GROUPS = [
+  {
+    dept: 'cse', years: [2016, 2020], total: 90,
+    course: {
+      req: 25,
+      items: [_c('cap1', '캡스톤디자인1', 5, ['캡스톤디자인1', '캡스톤1']), _c('cap2', '캡스톤디자인2', 5, ['캡스톤디자인2', '캡스톤2'])],
+      special: { label: '전공영어 (1~4 중 택3, 15점)', main: ENG_MAIN, subs: ENG_SUB, slots: 3, per: 5 },
+    },
+    designated: { req: 14, items: [_count('adv', '전공상담', 1, 4, '회당 1점, 최대 4점'), _flag('fest', '학술제 발표', 10)] },
+    free: { req: 6, items: [FREE_COMMON[0], FREE_COMMON[1], MT_FREE, FREE_COMMON[2]] },
+    note: '전공영어1~4 중 택3을 수강하지 못했다면 전공영어기초·전공영어응용·예비창업설계로 대체 인정됩니다.',
+  },
+  {
+    dept: 'cse', years: [2021, 2021], total: 90,
+    course: {
+      req: 25,
+      items: [_c('cap1', '캡스톤디자인1', 5, ['캡스톤디자인1', '캡스톤1']), _c('cap2', '캡스톤디자인2', 5, ['캡스톤디자인2', '캡스톤2'])],
+      special: { label: '전공영어 (1~4 중 택3, 15점)', main: ENG_MAIN, subs: ENG_SUB, slots: 3, per: 5 },
+    },
+    designated: {
+      req: 15,
+      items: [_count('adv', '전공상담', 1, 4, '회당 1점, 최대 4점'), _count('deptDesig', '학과활동 (4학년 간담회 참석)', 1, 1, '1점'), _flag('fest', '학술제 발표', 10)],
+    },
+    free: { req: 5, items: [FREE_COMMON[0], MT_FREE, FREE_COMMON[2]] },
+    note: '전공영어1~4 중 택3을 수강하지 못했다면 전공영어기초·전공영어응용·예비창업설계로 대체 인정됩니다.',
+  },
+  {
+    dept: 'cse', years: [2022, 2024], total: 104,
+    course: {
+      req: 25,
+      items: [
+        _c('cap', '캡스톤디자인', 5), _c('indcap', '산학캡스톤디자인', 5),
+        _c('engBasic', '전공영어기초', 5), _c('engApply', '전공영어응용', 5), _c('startup', '예비창업설계', 5),
+      ],
+    },
+    designated: {
+      req: 24,
+      items: [
+        _count('adv', '전공상담', 1, 4, '회당 1점, 최대 4점'), _flag('fest', '학술제 발표', 10),
+        _flag('coding', '코딩역량인증제 Level2 이상', 5), _flag('aisw', 'AI·SW전공역량졸업인증제', 5),
+      ],
+    },
+    free: { req: 10, items: [FREE_COMMON[0], FREE_COMMON[1], MT_FREE, FREE_COMMON[2]] },
+  },
+  {
+    dept: 'cse', years: [2025, 2026], total: 104,
+    course: {
+      req: 25,
+      items: [
+        _c('cap', '캡스톤디자인', 5), _c('indcap', '산학캡스톤디자인', 5),
+        _c('engBasic', '전공영어기초', 5), _c('engApply', '전공영어응용', 5), _c('startup', '예비창업설계', 5),
+      ],
+    },
+    designated: {
+      req: 24,
+      items: [
+        _count('adv', '전공상담', 1, 4, '회당 1점, 최대 4점'), _count('mtDesig', '학과 MT 참여', 2, 4, '회당 2점, 최대 4점'),
+        _flag('fest', '학술제 발표', 6), _flag('coding', '코딩역량인증제 Level2 이상', 5), _flag('aisw', 'AI·SW전공역량졸업인증제', 5),
+      ],
+    },
+    free: { req: 10, items: [FREE_COMMON[0], FREE_COMMON[1], FREE_COMMON[2]] },
+  },
+];
+
+
+/* ------------------------------------------------------------
+ * 다른 학과 (PDF p.3~8). 항목 구성은 knowledge/ 문서와 동일합니다.
+ * ------------------------------------------------------------ */
+const _num = (id, label, max, hint) => ({ id, label, type: 'number', max, hint });
+function _freeNum() { return { id: 'free', label: '비교과자율활동 점수 (맛있는SW·어학·자격증 등)', type: 'number', hint: '직접 입력한 점수' }; }
+const TOPCIT_FREE = _count('topcit', 'TOPCIT 응시', 1, 99, '회당 1점');
+const DEPT_ACT = _count('dept', '학과활동', 1, 99, '회당 1점');
+const CODING = _flag('coding', '코딩역량인증제 Level2 이상', 5);
+const AISW = _flag('aisw', 'AI·SW전공역량졸업인증제', 5);
+const EN_BASIC = _c('engBasic', '전공영어기초', 5), EN_APPLY = _c('engApply', '전공영어응용', 5), STARTUP = _c('startup', '예비창업설계', 5);
+const CAP_ANY = _c('capSel', '산학캡스톤디자인 또는 졸업논문프로젝트 (택1)', 5, ['산학캡스톤디자인2', '졸업논문프로젝트2', '산학캡스톤디자인', '졸업논문프로젝트', '산학캡스톤', '졸업논문']);
+const CLUB = _count('club', '학과학술동아리 (학기당 3점)', 3, 99, '학기당 3점');
+const CAP_A = _c('capA', '캡스톤디자인 (1과목째)', 5, ['캡스톤디자인', '캡스톤']);
+const CAP_B = _c('capB', '캡스톤디자인 (2과목째)', 5, ['캡스톤디자인', '캡스톤']);
+const LANG_CORE = _c('langCore', '중핵교양-국제사회언어영역 과목', 5, ['국제사회언어', '중핵교양']);
+
+const MORE_GROUPS = [
+  /* ---- 정보보호학과 ---- */
+  { dept: 'infosec', years: [2016, 2021], total: 85,
+    course: { req: 15, items: [_c('capSel', '캡스톤디자인3~4 택1', 5, ['캡스톤디자인3', '캡스톤디자인4', '캡스톤3', '캡스톤4']), EN_BASIC, EN_APPLY] },
+    designated: { req: 20, items: [_count('dept', '학과활동', 1, 10, '회당 1점, 최대 10점'), _flag('fest', '(단과대)학술제발표', 10)] },
+    free: { req: 5, items: [CLUB, TOPCIT_FREE, _freeNum()] },
+    note: '2016~2021학번 중 전공영어1·2를 수강하지 못했다면 대체과목 규정이 있습니다(PDF p.3). 대체 인정은 학과에 확인하세요.' },
+  { dept: 'infosec', years: [2022, 2022], total: 110,
+    course: { req: 25, items: [CAP_ANY, _c('cpro', 'C프로그래밍', 5, ['C프로그래밍', '씨프로그래밍']), EN_BASIC, EN_APPLY, STARTUP] },
+    designated: { req: 30, items: [_count('dept', '학과활동', 1, 10, '회당 1점, 최대 10점'), _flag('fest', '(단과대)학술제발표', 10), CODING, AISW] },
+    free: { req: 10, items: [CLUB, TOPCIT_FREE, _freeNum()] } },
+  { dept: 'infosec', years: [2023, 2026], total: 110,
+    course: { req: 25, items: [CAP_ANY, _c('cpro', 'C프로그래밍', 5, ['C프로그래밍', '씨프로그래밍']), EN_BASIC, EN_APPLY, STARTUP] },
+    designated: { req: 30, items: [_count('dept', '학과활동', 1, 10, '회당 1점, 최대 10점'), _flag('fest', '(단과대)학술제발표', 5), CODING, AISW, _count('topcitD', 'TOPCIT 응시', 1, 5, '회당 1점, 최대 5점')] },
+    free: { req: 10, items: [CLUB, _freeNum()] } },
+
+  /* ---- 의료IT공학과 ---- */
+  { dept: 'medit', years: [2021, 2021], total: 80,
+    course: { req: 15, items: [_c('med', '의학용어', 5), _c('pres', '프레젠테이션테크닉', 5), _c('eng', '현대응용영어', 5)] },
+    designated: { req: 6, items: [_flag('mt', '학과 MT', 1), _flag('fest', '학술제 참여', 1), _flag('expo', '전공관련 국제박람회', 2), _flag('career', '진로(취업)지도관련 학내 프로그램 참여', 2)] },
+    free: { req: 14, items: [_freeNum()] } },
+  { dept: 'medit', years: [2022, 2023], total: 88,
+    course: { req: 15, items: [_c('med', '의학용어', 5), _c('comp', '컴퓨팅적사고와문제해결', 5), _c('eng', '현대응용영어', 5)] },
+    designated: { req: 13, items: [_count('mt', 'MT 참여', 1, 2, '2회까지 인정(회당 1점)'), _flag('fest', '학술제 참여', 1), CODING, _flag('aisw', 'AI·SW전공역량졸업인증제 (200점 이상)', 5)] },
+    free: { req: 15, items: [_freeNum()] } },
+  { dept: 'medit', years: [2024, 2026], total: 89,
+    course: { req: 15, items: [_c('med', '의학용어', 5), _c('coding2', '컴퓨터코딩과문제해결', 5), _c('eng', '현대응용영어', 5)] },
+    designated: { req: 14, items: [_count('mt', 'MT 참여', 1, 2, '2회까지 인정(회당 1점)'), _flag('fest', '학술제 참여', 1), CODING, _flag('aisw', 'AI·SW전공역량졸업인증제 (200점 이상)', 5), _flag('topcitLv1', 'TOPCIT 수준1 달성', 1)] },
+    free: { req: 15, items: [_freeNum()] } },
+
+  /* ---- AI·빅데이터학과 ---- */
+  { dept: 'aibd', years: [2019, 2021], total: 80,
+    course: { req: 5, items: [LANG_CORE] },
+    designated: { req: 11, items: [_count('dept', '학과활동', 1, 5, '회당 1점, 최대 5점'), _num('cert', '자격증/경진대회 참가·수상 점수', 6, '최대 6점')] },
+    free: { req: 19, items: [_freeNum()] } },
+  { dept: 'aibd', years: [2022, 2022], total: 95,
+    course: { req: 10, items: [STARTUP, LANG_CORE] },
+    designated: { req: 21, items: [_count('dept', '학과활동', 1, 5, '회당 1점, 최대 5점'), _num('cert', '자격증/경진대회 참가·수상 점수', 6, '최대 6점'), CODING, AISW] },
+    free: { req: 19, items: [_freeNum()] } },
+  { dept: 'aibd', years: [2023, 2026], total: 95,
+    course: { req: 5, items: [STARTUP] },
+    designated: { req: 26, items: [_count('dept', '학과활동', 1, 5, '회당 1점, 최대 5점'), _num('cert', '자격증/경진대회 참가·수상 점수', 6, '최대 6점'), CODING, AISW, _count('topcitD', 'TOPCIT 응시', 1, 5, '회당 1점, 최대 5점')] },
+    free: { req: 19, items: [_freeNum()] } },
+
+  /* ---- 사물인터넷학과 ---- */
+  { dept: 'iot', years: [2017, 2018], total: 80,
+    course: { req: 10, items: [CAP_A, CAP_B] },
+    designated: { req: 10, items: [_count('prof', '지도교수상담', 1, 3, '회당 1점, 최대 3점'), _count('grad', '졸업상담', 1, 2, '회당 1점, 최대 2점'), _count('dept', '학과활동', 1, 5, '회당 1점, 최대 5점')] },
+    free: { req: 15, items: [TOPCIT_FREE, _freeNum()] },
+    note: '비교과 미지정에는 토익 500↑/OPIC M1↑/토익스피킹 100↑(각 5점) 등을 점수로 직접 입력하세요.' },
+  { dept: 'iot', years: [2019, 2021], total: 80,
+    course: { req: 15, items: [CAP_A, CAP_B, _c('langCore', '중핵교양 국제사회언어영역 "영어" 교과목', 5, ['국제사회언어', '중핵교양'])] },
+    designated: { req: 10, items: [_count('prof', '지도교수상담', 1, 3, '회당 1점, 최대 3점'), _count('grad', '졸업상담', 1, 2, '회당 1점, 최대 2점'), _count('dept', '학과활동', 1, 5, '회당 1점, 최대 5점')] },
+    free: { req: 10, items: [TOPCIT_FREE, _freeNum()] },
+    note: '비교과 미지정에는 토익 500↑/OPIC M1↑/토익스피킹 100↑(각 5점) 등을 점수로 직접 입력하세요.' },
+  { dept: 'iot', years: [2022, 2022], total: 80,
+    course: { req: 5, items: [STARTUP] },
+    designated: { req: 20, items: [_count('prof', '지도교수상담', 1, 3, '회당 1점, 최대 3점'), _count('grad', '졸업상담', 1, 2, '회당 1점, 최대 2점'), _count('dept', '학과활동', 1, 5, '회당 1점, 최대 5점'), CODING, AISW] },
+    free: { req: 10, items: [TOPCIT_FREE, _freeNum()] } },
+  { dept: 'iot', years: [2023, 2023], total: 81,
+    course: { req: 5, items: [STARTUP] },
+    designated: { req: 21, items: [_count('prof', '지도교수상담', 1, 3, '3회까지(회당 1점)'), _count('grad', '졸업상담', 1, 2, '2회까지(회당 1점)'), _count('dept', '학과활동', 1, 5, '5회까지(회당 1점)'), _count('topcitD', 'TOPCIT 응시', 1, 1, '1점'), CODING, AISW] },
+    free: { req: 10, items: [_freeNum()] } },
+  { dept: 'iot', years: [2024, 2024], total: 81,
+    course: { req: 5, items: [STARTUP] },
+    designated: { req: 18, items: [_count('prof', '지도교수상담', 1, 2, '2회까지(회당 1점)'), _count('dept', '학과활동', 1, 5, '5회까지(회당 1점)'), _count('topcitD', 'TOPCIT 응시', 1, 1, '1점'), CODING, AISW] },
+    free: { req: 13, items: [_freeNum()] } },
+  { dept: 'iot', years: [2025, 2026], total: 84,
+    course: { req: 5, items: [STARTUP] },
+    designated: { req: 21, items: [_count('career', '진로 및 취업상담', 1, 2, '2회까지(회당 1점)'), _count('dept', '학과활동', 1, 5, '5회까지(회당 1점)'), _count('topcitD', 'TOPCIT 응시', 1, 4, '회당 1점, 최대 4점'), CODING, AISW] },
+    free: { req: 13, items: [_freeNum()] } },
+
+  /* ---- 메타버스&게임학과 ---- */
+  { dept: 'meta', years: [2023, 2025], total: 110,
+    course: { req: 25, items: [_c('indcap', '산학캡스톤디자인', 5), _c('thesis', '졸업논문프로젝트', 5), EN_BASIC, EN_APPLY, STARTUP] },
+    designated: { req: 30, items: [_count('adv', '전공상담', 1, 5, '회당 1점, 최대 5점'), _flag('fest', '(단과대)학술제발표', 10), CODING, AISW, _num('topcitScore', 'TOPCIT 인정 점수 (수준별/세부 배점 환산)', 5, '최대 5점')] },
+    free: { req: 10, items: [DEPT_ACT, _freeNum()] } },
+  { dept: 'meta', years: [2026, 2026], total: 110,
+    course: { req: 25, items: [_c('indcap', '산학캡스톤디자인', 5), _c('thesis', '졸업논문프로젝트', 5), EN_BASIC, EN_APPLY, STARTUP] },
+    designated: { req: 25, items: [_count('adv', '전공상담', 1, 5, '회당 1점, 최대 5점'), _flag('fest', '(단과대)학술제발표', 10), CODING, AISW] },
+    free: { req: 15, items: [DEPT_ACT, TOPCIT_FREE, _freeNum()] } },
+];
+CHECKER_GROUPS.push(...MORE_GROUPS);
+
+function findGroup(dept, year) {
+  return CHECKER_GROUPS.find(g => g.dept === dept && year >= g.years[0] && year <= g.years[1]) || null;
+}
+
+const ROMAN = { 'Ⅰ': '1', 'Ⅱ': '2', 'Ⅲ': '3', 'Ⅳ': '4', 'ⅰ': '1', 'ⅱ': '2', 'ⅲ': '3', 'ⅳ': '4' };
+function normText(s) {
+  return String(s).replace(/[ⅠⅡⅢⅣⅰⅱⅲⅳ]/g, c => ROMAN[c]).toLowerCase().replace(/[^가-힣a-z0-9]/g, '');
+}
+
+/** 사용자 과목 목록을 기준표 과목에 중복 없이 매칭 (가장 긴 별칭이 우선) */
+function matchCourses(userCourses, pool) {
+  const matched = {}; // itemId -> 사용자가 입력한 과목명
+  const unmatched = [];
+  for (const raw of userCourses) {
+    const n = normText(raw);
+    if (!n) continue;
+    let best = null, bestLen = 0;
+    for (const it of pool) {
+      if (matched[it.id]) continue;
+      for (const a of it.alias) {
+        const an = normText(a);
+        if (an && n.includes(an) && an.length > bestLen) { best = it; bestLen = an.length; }
+      }
+    }
+    if (best) matched[best.id] = raw; else unmatched.push(raw);
+  }
+  return { matched, unmatched };
+}
+
+function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+/**
+ * state: { commonDone: {라벨: true}, courses: string[], act: {id: number|boolean} }
+ */
+function evaluate(dept, year, state) {
+  const g = findGroup(dept, year);
+  if (!g) return { error: '이 학과·학번은 자동 판정을 지원하지 않습니다. 챗봇에서 기준을 확인해 주세요.' };
+
+  const cats = [];
+  const warnings = [];
+  if (year < 2019) warnings.push('2016~2018학번의 대학공통 표가 PDF에 없어 2019~2022학번 기준(45점)을 적용했습니다.');
+  if (g.note) warnings.push(g.note);
+
+  // 1) 대학공통
+  const commonItems = COMMON_TABLE[commonKeyFor(year)];
+  const cLines = commonItems.map(([label, pts]) => {
+    const ok = !!(state.commonDone && state.commonDone[label]);
+    return { label, earned: ok ? pts : 0, max: pts, ok, hint: ok ? '' : '미이수' };
+  });
+  cats.push({ name: '대학공통 필수', required: 45, lines: cLines });
+
+  // 2) 교과
+  const pool = [...g.course.items];
+  if (g.course.special) pool.push(...g.course.special.main, ...g.course.special.subs);
+  const { matched, unmatched } = matchCourses(state.courses || [], pool);
+  const courseLines = g.course.items.map(it => {
+    const ok = !!matched[it.id];
+    return { label: it.label, earned: ok ? it.pts : 0, max: it.pts, ok, hint: ok ? `← ${matched[it.id]}` : '미이수' };
+  });
+  if (g.course.special) {
+    const sp = g.course.special;
+    const mainHit = sp.main.filter(i => matched[i.id]);
+    const subHit = sp.subs.filter(i => matched[i.id]);
+    const slots = Math.min(sp.slots, mainHit.length + subHit.length);
+    const earned = slots * sp.per;
+    const parts = [...mainHit, ...subHit].slice(0, slots).map(i => i.label);
+    courseLines.push({
+      label: sp.label, earned, max: sp.slots * sp.per, ok: slots === sp.slots,
+      hint: parts.length ? `인정: ${parts.join(', ')}` : '미이수 (대체: 전공영어기초·응용·예비창업설계)',
+    });
+  }
+  cats.push({ name: '교과', required: g.course.req, lines: courseLines });
+
+  // 3) 비교과 지정 / 4) 비교과 미지정
+  const act = state.act || {};
+  const actLine = (it) => {
+    if (it.type === 'flag') {
+      const ok = !!act[it.id];
+      return { label: it.label, earned: ok ? it.pts : 0, max: it.pts, ok, hint: ok ? '' : '미참여' };
+    }
+    if (it.type === 'number') {
+      const raw = Math.max(0, Number(act[it.id]) || 0);
+      const v = it.max != null ? Math.min(raw, it.max) : raw;
+      return { label: it.label, earned: v, max: it.max != null ? it.max : null, ok: it.max != null ? v >= it.max : v > 0, hint: it.hint };
+    }
+    const cnt = Math.max(0, Math.floor(Number(act[it.id]) || 0));
+    const cap = it.max >= 99 ? null : it.max;
+    const val = cap === null ? cnt * it.per : Math.min(cnt * it.per, cap);
+    return { label: `${it.label} (${cnt}회)`, earned: val, max: cap, ok: cap !== null ? val >= cap : val > 0, hint: it.hint };
+  };
+  cats.push({ name: '비교과 지정', required: g.designated.req, lines: g.designated.items.map(actLine) });
+  cats.push({ name: '비교과 미지정', required: g.free.req, lines: g.free.items.map(actLine) });
+
+  let total = 0, allOk = true;
+  for (const c of cats) {
+    const sum = c.lines.reduce((a, l) => a + l.earned, 0);
+    c.earned = Math.min(sum, c.required); // 구간별 반영 상한 = 해당 구간 요구 점수
+    c.raw = sum;
+    c.ok = c.earned >= c.required;
+    total += c.earned;
+    allOk = allOk && c.ok;
+  }
+  return {
+    group: g, cats, total, target: g.total, ok: total >= g.total && allOk,
+    remaining: Math.max(0, g.total - total), unmatched, warnings,
+  };
+}
+
+if (typeof module !== 'undefined') module.exports = { normText, evaluate, findGroup, CHECKER_GROUPS, COMMON_TABLE, matchCourses };
+</script>
+<script>/* ============================================================
+ * app.js — 화면(UI) 로직. 검색은 engine.js, 판정은 checker.js 가 담당
+ * ============================================================ */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+const STORE_KEY = 'gradbot.v1';
+let state = { dept: 'cse', year: 2022, commonDone: {}, courses: '', act: {} };
+try { Object.assign(state, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); } catch (e) { /* 저장소를 못 쓰는 환경은 무시 */ }
+const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } };
+
+let chunks = [...KB];
+const retriever = new Retriever(chunks);
+
+/* ---------- 프로필(학과/학번) ---------- */
+function initProfile() {
+  $('#pDept').innerHTML = Object.entries(DEPTS).map(([id, n]) => `<option value="${id}">${n}</option>`).join('');
+  const years = []; for (let y = 2026; y >= 2016; y--) years.push(y);
+  $('#pYear').innerHTML = years.map(y => `<option value="${y}">${y}학번</option>`).join('');
+  $('#pDept').value = state.dept; $('#pYear').value = state.year;
+  const onChange = () => {
+    state.dept = $('#pDept').value; state.year = +$('#pYear').value; save();
+    renderChecker();
+  };
+  $('#pDept').onchange = onChange; $('#pYear').onchange = onChange;
+}
+
+/* ---------- 탭 ---------- */
+document.querySelectorAll('.tab').forEach(btn => btn.onclick = () => showTab(btn.dataset.tab));
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+}
+
+/* ---------- 챗봇 ---------- */
+function mdLite(text) {
+  const lines = esc(text).split('\n');
+  let html = '', inList = false;
+  for (const l of lines) {
+    const m = l.match(/^\s*[-·]\s+(.*)$/);
+    if (m) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${m[1]}</li>`; }
+    else { if (inList) { html += '</ul>'; inList = false; } if (l.trim()) html += `<p>${l}</p>`; }
+  }
+  return html + (inList ? '</ul>' : '');
+}
+const addMsg = (who, html) => {
+  const d = document.createElement('div'); d.className = 'msg ' + who; d.innerHTML = html;
+  $('#log').appendChild(d); $('#log').scrollTop = $('#log').scrollHeight; return d;
+};
+
+function answer(question) {
+  const r = retriever.search(question, { dept: state.dept, year: state.year });
+  if (!r.results.length || !r.confident) {
+    return `<p>문서에서 관련 내용을 찾지 못했어요. 😢</p>
+      <p>학과와 학번을 함께 적어 보세요. 예) <b>“2024학번 사물인터넷학과 졸업요건”</b>, <b>“TOPCIT 점수 기준”</b>, <b>“비교과 신청 방법”</b></p>`;
+  }
+  const top = r.results[0].chunk;
+  let lead = '';
+  const total = top.text.match(/합계\s*(\d+)\s*점/);
+  if (/총\s*점|합계|몇\s*점|졸업\s*점수|(필요|기준)(한|하)?\s*점수/.test(question) && total && top.dept && top.dept !== 'common') {
+    lead = `<p class="lead">${esc(DEPTS[top.dept])} ${esc(yearLabel(top.years))} 졸업 기준은 합계 ${total[1]}점입니다.</p>`;
+  } else if (r.dept && top.dept === r.dept) {
+    lead = `<p class="lead">${esc(DEPTS[r.dept])}${r.year ? ' ' + r.year + '학번' : ''} 기준으로 찾았어요.</p>`;
+  }
+  const cards = r.results.map(({ chunk: c }) => `
+    <div class="src">
+      <div class="src-title">${esc(c.title)}</div>
+      <div class="src-meta">📎 ${esc(c.source)}${c.page ? ' · p.' + c.page : ''}${c.extra ? ' · 추가 문서' : ''}</div>
+      <div class="src-body">${mdLite(c.text)}</div>
+    </div>`).join('');
+  const cta = /내\s|제가|나의|저는|충족|가능할|졸업\s*할\s*수/.test(question)
+    ? `<div class="cta"><button type="button" class="chip" data-go="check">✅ 내 활동·수강 과목으로 졸업 판정하기</button></div>` : '';
+  const yearTip = r.needYear
+    ? `<p class="hint">💡 학번을 함께 적으면 그 학번 기준만 보여드려요. (예: “${esc(DEPTS[r.dept] || '학과')} 2024학번 …”)</p>` : '';
+  return lead + yearTip + cards + cta;
+}
+
+function ask(q) {
+  q = q.trim(); if (!q) return;
+  addMsg('user', esc(q));
+  addMsg('bot', answer(q));
+}
+$('#chatForm').onsubmit = (e) => { e.preventDefault(); ask($('#q').value); $('#q').value = ''; };
+$('#log').onclick = (e) => { const g = e.target.closest('[data-go]'); if (g) showTab(g.dataset.go); };
+
+const EXAMPLES = [
+  '2022학번 컴퓨터소프트웨어공학과 졸업 총점은?',
+  '2025학번 학술제발표는 몇 점이에요?',
+  '컴퓨터소프트웨어공학과 2025학번 비교과 지정 항목은?',
+  '2024학번 사물인터넷학과 졸업요건',
+  '메타버스&게임학과 TOPCIT 점수 기준',
+  '비교과 신청은 어디서 해요?',
+];
+$('#chips').innerHTML = EXAMPLES.map(t => `<button type="button" class="chip">${esc(t)}</button>`).join('');
+$('#chips').onclick = (e) => { const b = e.target.closest('.chip'); if (b) ask(b.textContent); };
+
+/* ---------- 졸업 판정 ---------- */
+const FORM_ID = (id) => 'act-' + id;
+
+function parseCourses(text) { return text.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean); }
+
+function renderChecker() {
+  const g = findGroup(state.dept, state.year);
+  $('#checkUnsupported').hidden = !!g;
+  $('#checkBody').hidden = !g;
+  if (!g) {
+    $('#checkUnsupported').innerHTML = `<b>${esc(DEPTS[state.dept])} ${state.year}학번</b>은 자동 판정을 아직 지원하지 않아요.<br>
+      이 학과·학번은 PDF에 졸업 기준표가 없어 판정할 수 없어요. 기준 문서가 있는 학번인지 <b>💬 질문하기</b>에서 확인해 보세요.`;
+    return;
+  }
+  // 대학공통
+  const common = COMMON_TABLE[commonKeyFor(state.year)];
+  $('#commonBox').innerHTML = common.map(([label, pts], i) => `
+    <div class="row"><input type="checkbox" id="cm${i}" data-label="${esc(label)}" ${state.commonDone[label] ? 'checked' : ''}>
+    <label for="cm${i}">${esc(label)} <small>(${pts}점)</small></label></div>`).join('');
+  // 과목 칩
+  const pool = [...g.course.items, ...(g.course.special ? [...g.course.special.main, ...g.course.special.subs] : [])];
+  $('#courseChips').innerHTML = pool.map(it => `<button type="button" class="chip" data-course="${esc(it.label)}">${esc(it.label)}</button>`).join('');
+  $('#courses').value = state.courses;
+  // 활동
+  const input = (it) => {
+    const id = FORM_ID(it.id), v = state.act[it.id];
+    if (it.type === 'flag') return `<div class="row"><input type="checkbox" id="${id}" data-act="${it.id}" data-type="flag" ${v ? 'checked' : ''}><label for="${id}">${esc(it.label)} <small>(${it.pts}점)</small></label></div>`;
+    const small = it.type === 'number' ? it.hint : (it.hint || '');
+    return `<div class="row"><label for="${id}">${esc(it.label)} <small>${esc(small)}</small></label><input type="number" min="0" id="${id}" data-act="${it.id}" data-type="num" value="${v ?? 0}"></div>`;
+  };
+  $('#desigBox').innerHTML = g.designated.items.map(input).join('');
+  $('#freeBox').innerHTML = g.free.items.map(input).join('');
+  renderResult();
+}
+
+function collect() {
+  const courses = parseCourses($('#courses').value);
+  state.courses = $('#courses').value;
+  document.querySelectorAll('[data-act]').forEach(el => {
+    state.act[el.dataset.act] = el.dataset.type === 'flag' ? el.checked : (Number(el.value) || 0);
+  });
+  document.querySelectorAll('#commonBox input').forEach(el => { state.commonDone[el.dataset.label] = el.checked; });
+  save();
+  return { commonDone: state.commonDone, courses, act: state.act };
+}
+
+function renderResult() {
+  const res = evaluate(state.dept, state.year, collect());
+  if (res.error) { $('#result').innerHTML = esc(res.error); return; }
+  const pct = (a, b) => Math.round(Math.min(100, (a / b) * 100));
+  const cats = res.cats.map(c => `
+    <div class="cat">
+      <div class="cat-head"><span>${esc(c.name)}</span><span>${c.earned} / ${c.required}점</span></div>
+      <div class="bar ${c.ok ? 'done' : ''}"><i style="width:${pct(c.earned, c.required)}%"></i></div>
+      <ul class="lines">${c.lines.map(l => `
+        <li class="${l.ok ? '' : 'miss'}">${l.ok ? '✔' : '✘'} ${esc(l.label)} — ${l.earned}${l.max != null ? '/' + l.max : ''}점 ${l.hint ? '<small>' + esc(l.hint) + '</small>' : ''}</li>`).join('')}
+      </ul>
+    </div>`).join('');
+  const lacking = res.cats.filter(c => !c.ok).map(c => `${c.name} ${c.required - c.earned}점`).join(', ');
+  $('#result').innerHTML = `
+    <h2>④ 판정 결과 — ${esc(DEPTS[state.dept])} ${state.year}학번 (기준 ${res.target}점)</h2>
+    <div class="verdict ${res.ok ? 'ok' : 'no'}">${res.ok
+      ? `🎉 졸업인증 기준을 충족했습니다 (${res.total} / ${res.target}점)`
+      : `아직 부족해요: ${res.total} / ${res.target}점 · 남은 ${res.remaining}점${lacking ? ` (${esc(lacking)})` : ''}`}</div>
+    ${res.warnings.map(w => `<div class="warn">ℹ️ ${esc(w)}</div>`).join('')}
+    ${res.unmatched.length ? `<div class="warn">기준표에서 찾지 못한 과목: ${res.unmatched.map(esc).join(', ')} — 과목명을 기준표 이름과 맞춰 보세요.</div>` : ''}
+    ${cats}
+    <p class="hint">구간별 점수는 해당 구간 요구 점수까지만 반영됩니다. 실제 인정 여부는 종합정보시스템의 개인별졸업진도관리에서 확인하세요.</p>`;
+}
+
+$('#checkBody').addEventListener('input', renderResult);
+$('#checkBody').addEventListener('change', renderResult);
+$('#allCommon').onclick = () => { document.querySelectorAll('#commonBox input').forEach(e => e.checked = true); renderResult(); };
+$('#noCommon').onclick = () => { document.querySelectorAll('#commonBox input').forEach(e => e.checked = false); renderResult(); };
+$('#courseChips').onclick = (e) => {
+  const b = e.target.closest('[data-course]'); if (!b) return;
+  const list = parseCourses($('#courses').value), name = b.dataset.course;
+  const i = list.findIndex(x => normText(x) === normText(name));
+  if (i >= 0) list.splice(i, 1); else list.push(name);
+  $('#courses').value = list.join('\n'); renderResult();
+};
+
+/* ---------- 문서 탭 ---------- */
+function renderDocs() {
+  const by = {};
+  chunks.forEach(c => { (by[c.source] ||= { n: 0, extra: !!c.extra }).n++; });
+  $('#docList').innerHTML = Object.entries(by).map(([s, v]) => `<li>${esc(s)} — chunk ${v.n}개${v.extra ? ' <span class="badge">추가</span>' : ''}</li>`).join('');
+}
+function addChunks(newChunks, label) {
+  chunks = chunks.concat(newChunks); retriever.setChunks(chunks); renderDocs();
+  $('#addedMsg').textContent = `✅ ${label}: ${newChunks.length}개 조각이 추가되었습니다. 💬 질문하기에서 물어보세요.`;
+}
+async function loadPdfJs() {
+  if (window.pdfjsLib) return window.pdfjsLib;
+  await new Promise((ok, no) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'; s.onload = ok; s.onerror = () => no(new Error('pdf.js 로드 실패(인터넷 연결 확인)'));
+    document.head.appendChild(s);
+  });
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  return pdfjsLib;
+}
+$('#file').onchange = async (e) => {
+  for (const f of e.target.files) {
+    try {
+      const name = f.name.replace(/\.[^.]+$/, '');
+      if (/\.pdf$/i.test(f.name)) {
+        const lib = await loadPdfJs();
+        const pdf = await lib.getDocument({ data: await f.arrayBuffer() }).promise;
+        let out = [];
+        for (let p = 1; p <= pdf.numPages; p++) {
+          const tc = await (await pdf.getPage(p)).getTextContent();
+          out = out.concat(chunkPlainText(tc.items.map(i => i.str).join(' '), name, p));
+        }
+        addChunks(out, f.name);
+      } else addChunks(chunkPlainText(await f.text(), name), f.name);
+    } catch (err) { $('#addedMsg').textContent = '❌ ' + f.name + ': ' + err.message; }
+  }
+  e.target.value = '';
+};
+$('#pasteAdd').onclick = () => {
+  const t = $('#pasteText').value.trim(); if (!t) return;
+  addChunks(chunkPlainText(t, $('#pasteName').value.trim() || '붙여넣은 문서'), '붙여넣기');
+  $('#pasteText').value = '';
+};
+
+/* ---------- 시작 ---------- */
+initProfile(); renderDocs(); renderChecker();
+addMsg('bot', `<p>안녕하세요! 다면적졸업인증제 기준 문서를 바탕으로 답해 드려요. 📚</p>
+  <ul><li>학과·학번을 함께 물어보면 정확해요. (상단에서 기본값 선택 가능)</li>
+  <li>내 활동·수강 과목으로 졸업 충족 여부를 보려면 <b>✅ 졸업 판정</b> 탭을 이용하세요.</li></ul>`);
+</script>
+</body>
+</html>

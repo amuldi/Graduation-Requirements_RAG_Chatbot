@@ -1,0 +1,2102 @@
+{
+ "common": {
+  "2019-2022": [
+   [
+    "인간사랑",
+    5
+   ],
+   [
+    "ASP(1,2학기)",
+    5
+   ],
+   [
+    "자기주도상담",
+    5
+   ],
+   [
+    "자기개발과 전공탐색",
+    5
+   ],
+   [
+    "졸업필수활동",
+    15
+   ],
+   [
+    "현대기본영어",
+    5
+   ],
+   [
+    "봉사학습",
+    5
+   ]
+  ],
+  "2023-2023": [
+   [
+    "인간사랑",
+    5
+   ],
+   [
+    "ASP(1,2학기)",
+    5
+   ],
+   [
+    "자기주도상담",
+    5
+   ],
+   [
+    "자기개발과 전공탐색(M&M)",
+    5
+   ],
+   [
+    "졸업종합지도",
+    15
+   ],
+   [
+    "현대기본영어",
+    5
+   ],
+   [
+    "봉사학습",
+    5
+   ]
+  ],
+  "2024-2026": [
+   [
+    "인간사랑",
+    5
+   ],
+   [
+    "ASP(1,2학기)",
+    5
+   ],
+   [
+    "자기주도상담",
+    5
+   ],
+   [
+    "자기개발과 전공탐색(M&M)",
+    5
+   ],
+   [
+    "졸업및취·창업지도",
+    13
+   ],
+   [
+    "학습윤리-기본",
+    1
+   ],
+   [
+    "학습윤리-심화",
+    1
+   ],
+   [
+    "현대실용영어",
+    5
+   ],
+   [
+    "봉사학습",
+    5
+   ]
+  ]
+ },
+ "groups": [
+  {
+   "dept": "cse",
+   "years": [
+    2016,
+    2020
+   ],
+   "total": 90,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "cap1",
+      "label": "캡스톤디자인1",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인1",
+       "캡스톤1"
+      ]
+     },
+     {
+      "id": "cap2",
+      "label": "캡스톤디자인2",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인2",
+       "캡스톤2"
+      ]
+     }
+    ],
+    "special": {
+     "label": "전공영어 (1~4 중 택3, 15점)",
+     "main": [
+      {
+       "id": "eng1",
+       "label": "전공영어1",
+       "pts": 5,
+       "alias": [
+        "전공영어1"
+       ]
+      },
+      {
+       "id": "eng2",
+       "label": "전공영어2",
+       "pts": 5,
+       "alias": [
+        "전공영어2"
+       ]
+      },
+      {
+       "id": "eng3",
+       "label": "전공영어3",
+       "pts": 5,
+       "alias": [
+        "전공영어3"
+       ]
+      },
+      {
+       "id": "eng4",
+       "label": "전공영어4",
+       "pts": 5,
+       "alias": [
+        "전공영어4"
+       ]
+      }
+     ],
+     "subs": [
+      {
+       "id": "engBasic",
+       "label": "전공영어기초",
+       "pts": 5,
+       "alias": [
+        "전공영어기초"
+       ]
+      },
+      {
+       "id": "engApply",
+       "label": "전공영어응용",
+       "pts": 5,
+       "alias": [
+        "전공영어응용"
+       ]
+      },
+      {
+       "id": "startup",
+       "label": "예비창업설계",
+       "pts": 5,
+       "alias": [
+        "예비창업설계"
+       ]
+      }
+     ],
+     "slots": 3,
+     "per": 5
+    }
+   },
+   "designated": {
+    "req": 14,
+    "items": [
+     {
+      "id": "adv",
+      "label": "전공상담",
+      "type": "count",
+      "per": 1,
+      "max": 4,
+      "hint": "회당 1점, 최대 4점"
+     },
+     {
+      "id": "fest",
+      "label": "학술제 발표",
+      "type": "flag",
+      "pts": 10
+     }
+    ]
+   },
+   "free": {
+    "req": 6,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "mt",
+      "label": "학과 MT 참여",
+      "type": "count",
+      "per": 2,
+      "max": 99,
+      "hint": "회당 2점"
+     },
+     {
+      "id": "free",
+      "label": "기타 비교과자율활동 점수 (맛있는SW시리즈 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   },
+   "note": "전공영어1~4 중 택3을 수강하지 못했다면 전공영어기초·전공영어응용·예비창업설계로 대체 인정됩니다."
+  },
+  {
+   "dept": "cse",
+   "years": [
+    2021,
+    2021
+   ],
+   "total": 90,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "cap1",
+      "label": "캡스톤디자인1",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인1",
+       "캡스톤1"
+      ]
+     },
+     {
+      "id": "cap2",
+      "label": "캡스톤디자인2",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인2",
+       "캡스톤2"
+      ]
+     }
+    ],
+    "special": {
+     "label": "전공영어 (1~4 중 택3, 15점)",
+     "main": [
+      {
+       "id": "eng1",
+       "label": "전공영어1",
+       "pts": 5,
+       "alias": [
+        "전공영어1"
+       ]
+      },
+      {
+       "id": "eng2",
+       "label": "전공영어2",
+       "pts": 5,
+       "alias": [
+        "전공영어2"
+       ]
+      },
+      {
+       "id": "eng3",
+       "label": "전공영어3",
+       "pts": 5,
+       "alias": [
+        "전공영어3"
+       ]
+      },
+      {
+       "id": "eng4",
+       "label": "전공영어4",
+       "pts": 5,
+       "alias": [
+        "전공영어4"
+       ]
+      }
+     ],
+     "subs": [
+      {
+       "id": "engBasic",
+       "label": "전공영어기초",
+       "pts": 5,
+       "alias": [
+        "전공영어기초"
+       ]
+      },
+      {
+       "id": "engApply",
+       "label": "전공영어응용",
+       "pts": 5,
+       "alias": [
+        "전공영어응용"
+       ]
+      },
+      {
+       "id": "startup",
+       "label": "예비창업설계",
+       "pts": 5,
+       "alias": [
+        "예비창업설계"
+       ]
+      }
+     ],
+     "slots": 3,
+     "per": 5
+    }
+   },
+   "designated": {
+    "req": 15,
+    "items": [
+     {
+      "id": "adv",
+      "label": "전공상담",
+      "type": "count",
+      "per": 1,
+      "max": 4,
+      "hint": "회당 1점, 최대 4점"
+     },
+     {
+      "id": "deptDesig",
+      "label": "학과활동 (4학년 간담회 참석)",
+      "type": "count",
+      "per": 1,
+      "max": 1,
+      "hint": "1점"
+     },
+     {
+      "id": "fest",
+      "label": "학술제 발표",
+      "type": "flag",
+      "pts": 10
+     }
+    ]
+   },
+   "free": {
+    "req": 5,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "mt",
+      "label": "학과 MT 참여",
+      "type": "count",
+      "per": 2,
+      "max": 99,
+      "hint": "회당 2점"
+     },
+     {
+      "id": "free",
+      "label": "기타 비교과자율활동 점수 (맛있는SW시리즈 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   },
+   "note": "전공영어1~4 중 택3을 수강하지 못했다면 전공영어기초·전공영어응용·예비창업설계로 대체 인정됩니다."
+  },
+  {
+   "dept": "cse",
+   "years": [
+    2022,
+    2024
+   ],
+   "total": 104,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "cap",
+      "label": "캡스톤디자인",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인"
+      ]
+     },
+     {
+      "id": "indcap",
+      "label": "산학캡스톤디자인",
+      "pts": 5,
+      "alias": [
+       "산학캡스톤디자인"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     },
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 24,
+    "items": [
+     {
+      "id": "adv",
+      "label": "전공상담",
+      "type": "count",
+      "per": 1,
+      "max": 4,
+      "hint": "회당 1점, 최대 4점"
+     },
+     {
+      "id": "fest",
+      "label": "학술제 발표",
+      "type": "flag",
+      "pts": 10
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "mt",
+      "label": "학과 MT 참여",
+      "type": "count",
+      "per": 2,
+      "max": 99,
+      "hint": "회당 2점"
+     },
+     {
+      "id": "free",
+      "label": "기타 비교과자율활동 점수 (맛있는SW시리즈 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "cse",
+   "years": [
+    2025,
+    2026
+   ],
+   "total": 104,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "cap",
+      "label": "캡스톤디자인",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인"
+      ]
+     },
+     {
+      "id": "indcap",
+      "label": "산학캡스톤디자인",
+      "pts": 5,
+      "alias": [
+       "산학캡스톤디자인"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     },
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 24,
+    "items": [
+     {
+      "id": "adv",
+      "label": "전공상담",
+      "type": "count",
+      "per": 1,
+      "max": 4,
+      "hint": "회당 1점, 최대 4점"
+     },
+     {
+      "id": "mtDesig",
+      "label": "학과 MT 참여",
+      "type": "count",
+      "per": 2,
+      "max": 4,
+      "hint": "회당 2점, 최대 4점"
+     },
+     {
+      "id": "fest",
+      "label": "학술제 발표",
+      "type": "flag",
+      "pts": 6
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "기타 비교과자율활동 점수 (맛있는SW시리즈 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "infosec",
+   "years": [
+    2016,
+    2021
+   ],
+   "total": 85,
+   "course": {
+    "req": 15,
+    "items": [
+     {
+      "id": "capSel",
+      "label": "캡스톤디자인3~4 택1",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인3",
+       "캡스톤디자인4",
+       "캡스톤3",
+       "캡스톤4"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 20,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 10,
+      "hint": "회당 1점, 최대 10점"
+     },
+     {
+      "id": "fest",
+      "label": "(단과대)학술제발표",
+      "type": "flag",
+      "pts": 10
+     }
+    ]
+   },
+   "free": {
+    "req": 5,
+    "items": [
+     {
+      "id": "club",
+      "label": "학과학술동아리 (학기당 3점)",
+      "type": "count",
+      "per": 3,
+      "max": 99,
+      "hint": "학기당 3점"
+     },
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   },
+   "note": "2016~2021학번 중 전공영어1·2를 수강하지 못했다면 대체과목 규정이 있습니다(PDF p.3). 대체 인정은 학과에 확인하세요."
+  },
+  {
+   "dept": "infosec",
+   "years": [
+    2022,
+    2022
+   ],
+   "total": 110,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "capSel",
+      "label": "산학캡스톤디자인 또는 졸업논문프로젝트 (택1)",
+      "pts": 5,
+      "alias": [
+       "산학캡스톤디자인2",
+       "졸업논문프로젝트2",
+       "산학캡스톤디자인",
+       "졸업논문프로젝트",
+       "산학캡스톤",
+       "졸업논문"
+      ]
+     },
+     {
+      "id": "cpro",
+      "label": "C프로그래밍",
+      "pts": 5,
+      "alias": [
+       "C프로그래밍",
+       "씨프로그래밍"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     },
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 30,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 10,
+      "hint": "회당 1점, 최대 10점"
+     },
+     {
+      "id": "fest",
+      "label": "(단과대)학술제발표",
+      "type": "flag",
+      "pts": 10
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "club",
+      "label": "학과학술동아리 (학기당 3점)",
+      "type": "count",
+      "per": 3,
+      "max": 99,
+      "hint": "학기당 3점"
+     },
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "infosec",
+   "years": [
+    2023,
+    2026
+   ],
+   "total": 110,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "capSel",
+      "label": "산학캡스톤디자인 또는 졸업논문프로젝트 (택1)",
+      "pts": 5,
+      "alias": [
+       "산학캡스톤디자인2",
+       "졸업논문프로젝트2",
+       "산학캡스톤디자인",
+       "졸업논문프로젝트",
+       "산학캡스톤",
+       "졸업논문"
+      ]
+     },
+     {
+      "id": "cpro",
+      "label": "C프로그래밍",
+      "pts": 5,
+      "alias": [
+       "C프로그래밍",
+       "씨프로그래밍"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     },
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 30,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 10,
+      "hint": "회당 1점, 최대 10점"
+     },
+     {
+      "id": "fest",
+      "label": "(단과대)학술제발표",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "topcitD",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "club",
+      "label": "학과학술동아리 (학기당 3점)",
+      "type": "count",
+      "per": 3,
+      "max": 99,
+      "hint": "학기당 3점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "medit",
+   "years": [
+    2021,
+    2021
+   ],
+   "total": 80,
+   "course": {
+    "req": 15,
+    "items": [
+     {
+      "id": "med",
+      "label": "의학용어",
+      "pts": 5,
+      "alias": [
+       "의학용어"
+      ]
+     },
+     {
+      "id": "pres",
+      "label": "프레젠테이션테크닉",
+      "pts": 5,
+      "alias": [
+       "프레젠테이션테크닉"
+      ]
+     },
+     {
+      "id": "eng",
+      "label": "현대응용영어",
+      "pts": 5,
+      "alias": [
+       "현대응용영어"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 6,
+    "items": [
+     {
+      "id": "mt",
+      "label": "학과 MT",
+      "type": "flag",
+      "pts": 1
+     },
+     {
+      "id": "fest",
+      "label": "학술제 참여",
+      "type": "flag",
+      "pts": 1
+     },
+     {
+      "id": "expo",
+      "label": "전공관련 국제박람회",
+      "type": "flag",
+      "pts": 2
+     },
+     {
+      "id": "career",
+      "label": "진로(취업)지도관련 학내 프로그램 참여",
+      "type": "flag",
+      "pts": 2
+     }
+    ]
+   },
+   "free": {
+    "req": 14,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "medit",
+   "years": [
+    2022,
+    2023
+   ],
+   "total": 88,
+   "course": {
+    "req": 15,
+    "items": [
+     {
+      "id": "med",
+      "label": "의학용어",
+      "pts": 5,
+      "alias": [
+       "의학용어"
+      ]
+     },
+     {
+      "id": "comp",
+      "label": "컴퓨팅적사고와문제해결",
+      "pts": 5,
+      "alias": [
+       "컴퓨팅적사고와문제해결"
+      ]
+     },
+     {
+      "id": "eng",
+      "label": "현대응용영어",
+      "pts": 5,
+      "alias": [
+       "현대응용영어"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 13,
+    "items": [
+     {
+      "id": "mt",
+      "label": "MT 참여",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "2회까지 인정(회당 1점)"
+     },
+     {
+      "id": "fest",
+      "label": "학술제 참여",
+      "type": "flag",
+      "pts": 1
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제 (200점 이상)",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 15,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "medit",
+   "years": [
+    2024,
+    2026
+   ],
+   "total": 89,
+   "course": {
+    "req": 15,
+    "items": [
+     {
+      "id": "med",
+      "label": "의학용어",
+      "pts": 5,
+      "alias": [
+       "의학용어"
+      ]
+     },
+     {
+      "id": "coding2",
+      "label": "컴퓨터코딩과문제해결",
+      "pts": 5,
+      "alias": [
+       "컴퓨터코딩과문제해결"
+      ]
+     },
+     {
+      "id": "eng",
+      "label": "현대응용영어",
+      "pts": 5,
+      "alias": [
+       "현대응용영어"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 14,
+    "items": [
+     {
+      "id": "mt",
+      "label": "MT 참여",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "2회까지 인정(회당 1점)"
+     },
+     {
+      "id": "fest",
+      "label": "학술제 참여",
+      "type": "flag",
+      "pts": 1
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제 (200점 이상)",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "topcitLv1",
+      "label": "TOPCIT 수준1 달성",
+      "type": "flag",
+      "pts": 1
+     }
+    ]
+   },
+   "free": {
+    "req": 15,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "aibd",
+   "years": [
+    2019,
+    2021
+   ],
+   "total": 80,
+   "course": {
+    "req": 5,
+    "items": [
+     {
+      "id": "langCore",
+      "label": "중핵교양-국제사회언어영역 과목",
+      "pts": 5,
+      "alias": [
+       "국제사회언어",
+       "중핵교양"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 11,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     },
+     {
+      "id": "cert",
+      "label": "자격증/경진대회 참가·수상 점수",
+      "type": "number",
+      "max": 6,
+      "hint": "최대 6점"
+     }
+    ]
+   },
+   "free": {
+    "req": 19,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "aibd",
+   "years": [
+    2022,
+    2022
+   ],
+   "total": 95,
+   "course": {
+    "req": 10,
+    "items": [
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     },
+     {
+      "id": "langCore",
+      "label": "중핵교양-국제사회언어영역 과목",
+      "pts": 5,
+      "alias": [
+       "국제사회언어",
+       "중핵교양"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 21,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     },
+     {
+      "id": "cert",
+      "label": "자격증/경진대회 참가·수상 점수",
+      "type": "number",
+      "max": 6,
+      "hint": "최대 6점"
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 19,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "aibd",
+   "years": [
+    2023,
+    2026
+   ],
+   "total": 95,
+   "course": {
+    "req": 5,
+    "items": [
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 26,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     },
+     {
+      "id": "cert",
+      "label": "자격증/경진대회 참가·수상 점수",
+      "type": "number",
+      "max": 6,
+      "hint": "최대 6점"
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "topcitD",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     }
+    ]
+   },
+   "free": {
+    "req": 19,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "iot",
+   "years": [
+    2017,
+    2018
+   ],
+   "total": 80,
+   "course": {
+    "req": 10,
+    "items": [
+     {
+      "id": "capA",
+      "label": "캡스톤디자인 (1과목째)",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인",
+       "캡스톤"
+      ]
+     },
+     {
+      "id": "capB",
+      "label": "캡스톤디자인 (2과목째)",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인",
+       "캡스톤"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 10,
+    "items": [
+     {
+      "id": "prof",
+      "label": "지도교수상담",
+      "type": "count",
+      "per": 1,
+      "max": 3,
+      "hint": "회당 1점, 최대 3점"
+     },
+     {
+      "id": "grad",
+      "label": "졸업상담",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "회당 1점, 최대 2점"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     }
+    ]
+   },
+   "free": {
+    "req": 15,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   },
+   "note": "비교과 미지정에는 토익 500↑/OPIC M1↑/토익스피킹 100↑(각 5점) 등을 점수로 직접 입력하세요."
+  },
+  {
+   "dept": "iot",
+   "years": [
+    2019,
+    2021
+   ],
+   "total": 80,
+   "course": {
+    "req": 15,
+    "items": [
+     {
+      "id": "capA",
+      "label": "캡스톤디자인 (1과목째)",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인",
+       "캡스톤"
+      ]
+     },
+     {
+      "id": "capB",
+      "label": "캡스톤디자인 (2과목째)",
+      "pts": 5,
+      "alias": [
+       "캡스톤디자인",
+       "캡스톤"
+      ]
+     },
+     {
+      "id": "langCore",
+      "label": "중핵교양 국제사회언어영역 \"영어\" 교과목",
+      "pts": 5,
+      "alias": [
+       "국제사회언어",
+       "중핵교양"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 10,
+    "items": [
+     {
+      "id": "prof",
+      "label": "지도교수상담",
+      "type": "count",
+      "per": 1,
+      "max": 3,
+      "hint": "회당 1점, 최대 3점"
+     },
+     {
+      "id": "grad",
+      "label": "졸업상담",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "회당 1점, 최대 2점"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   },
+   "note": "비교과 미지정에는 토익 500↑/OPIC M1↑/토익스피킹 100↑(각 5점) 등을 점수로 직접 입력하세요."
+  },
+  {
+   "dept": "iot",
+   "years": [
+    2022,
+    2022
+   ],
+   "total": 80,
+   "course": {
+    "req": 5,
+    "items": [
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 20,
+    "items": [
+     {
+      "id": "prof",
+      "label": "지도교수상담",
+      "type": "count",
+      "per": 1,
+      "max": 3,
+      "hint": "회당 1점, 최대 3점"
+     },
+     {
+      "id": "grad",
+      "label": "졸업상담",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "회당 1점, 최대 2점"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "iot",
+   "years": [
+    2023,
+    2023
+   ],
+   "total": 81,
+   "course": {
+    "req": 5,
+    "items": [
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 21,
+    "items": [
+     {
+      "id": "prof",
+      "label": "지도교수상담",
+      "type": "count",
+      "per": 1,
+      "max": 3,
+      "hint": "3회까지(회당 1점)"
+     },
+     {
+      "id": "grad",
+      "label": "졸업상담",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "2회까지(회당 1점)"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "5회까지(회당 1점)"
+     },
+     {
+      "id": "topcitD",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 1,
+      "hint": "1점"
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "iot",
+   "years": [
+    2024,
+    2024
+   ],
+   "total": 81,
+   "course": {
+    "req": 5,
+    "items": [
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 18,
+    "items": [
+     {
+      "id": "prof",
+      "label": "지도교수상담",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "2회까지(회당 1점)"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "5회까지(회당 1점)"
+     },
+     {
+      "id": "topcitD",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 1,
+      "hint": "1점"
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 13,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "iot",
+   "years": [
+    2025,
+    2026
+   ],
+   "total": 84,
+   "course": {
+    "req": 5,
+    "items": [
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 21,
+    "items": [
+     {
+      "id": "career",
+      "label": "진로 및 취업상담",
+      "type": "count",
+      "per": 1,
+      "max": 2,
+      "hint": "2회까지(회당 1점)"
+     },
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "5회까지(회당 1점)"
+     },
+     {
+      "id": "topcitD",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 4,
+      "hint": "회당 1점, 최대 4점"
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 13,
+    "items": [
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "meta",
+   "years": [
+    2023,
+    2025
+   ],
+   "total": 110,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "indcap",
+      "label": "산학캡스톤디자인",
+      "pts": 5,
+      "alias": [
+       "산학캡스톤디자인"
+      ]
+     },
+     {
+      "id": "thesis",
+      "label": "졸업논문프로젝트",
+      "pts": 5,
+      "alias": [
+       "졸업논문프로젝트"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     },
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 30,
+    "items": [
+     {
+      "id": "adv",
+      "label": "전공상담",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     },
+     {
+      "id": "fest",
+      "label": "(단과대)학술제발표",
+      "type": "flag",
+      "pts": 10
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "topcitScore",
+      "label": "TOPCIT 인정 점수 (수준별/세부 배점 환산)",
+      "type": "number",
+      "max": 5,
+      "hint": "최대 5점"
+     }
+    ]
+   },
+   "free": {
+    "req": 10,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  },
+  {
+   "dept": "meta",
+   "years": [
+    2026,
+    2026
+   ],
+   "total": 110,
+   "course": {
+    "req": 25,
+    "items": [
+     {
+      "id": "indcap",
+      "label": "산학캡스톤디자인",
+      "pts": 5,
+      "alias": [
+       "산학캡스톤디자인"
+      ]
+     },
+     {
+      "id": "thesis",
+      "label": "졸업논문프로젝트",
+      "pts": 5,
+      "alias": [
+       "졸업논문프로젝트"
+      ]
+     },
+     {
+      "id": "engBasic",
+      "label": "전공영어기초",
+      "pts": 5,
+      "alias": [
+       "전공영어기초"
+      ]
+     },
+     {
+      "id": "engApply",
+      "label": "전공영어응용",
+      "pts": 5,
+      "alias": [
+       "전공영어응용"
+      ]
+     },
+     {
+      "id": "startup",
+      "label": "예비창업설계",
+      "pts": 5,
+      "alias": [
+       "예비창업설계"
+      ]
+     }
+    ]
+   },
+   "designated": {
+    "req": 25,
+    "items": [
+     {
+      "id": "adv",
+      "label": "전공상담",
+      "type": "count",
+      "per": 1,
+      "max": 5,
+      "hint": "회당 1점, 최대 5점"
+     },
+     {
+      "id": "fest",
+      "label": "(단과대)학술제발표",
+      "type": "flag",
+      "pts": 10
+     },
+     {
+      "id": "coding",
+      "label": "코딩역량인증제 Level2 이상",
+      "type": "flag",
+      "pts": 5
+     },
+     {
+      "id": "aisw",
+      "label": "AI·SW전공역량졸업인증제",
+      "type": "flag",
+      "pts": 5
+     }
+    ]
+   },
+   "free": {
+    "req": 15,
+    "items": [
+     {
+      "id": "dept",
+      "label": "학과활동",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "topcit",
+      "label": "TOPCIT 응시",
+      "type": "count",
+      "per": 1,
+      "max": 99,
+      "hint": "회당 1점"
+     },
+     {
+      "id": "free",
+      "label": "비교과자율활동 점수 (맛있는SW·어학·자격증 등)",
+      "type": "number",
+      "hint": "직접 입력한 점수"
+     }
+    ]
+   }
+  }
+ ]
+}

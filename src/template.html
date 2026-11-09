@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>졸업요건 챗봇</title>
+<style>{{CSS}}</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>🎓 졸업요건 챗봇</h1>
+      <p class="sub">SW융합대학 다면적졸업인증제 · 문서 기반(RAG) 질의응답 + 졸업 충족 판정</p>
+    </div>
+    <div class="profile">
+      <label>학과 <select id="pDept"></select></label>
+      <label>학번 <select id="pYear"></select></label>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="chat" role="tab">💬 질문하기</button>
+    <button class="tab" data-tab="check" role="tab">✅ 졸업 판정</button>
+    <button class="tab" data-tab="docs" role="tab">📄 문서</button>
+  </nav>
+
+  <!-- 1. 챗봇 -->
+  <main id="tab-chat" class="panel active">
+    <div id="log" class="log" aria-live="polite"></div>
+    <div id="chips" class="chips"></div>
+    <form id="chatForm" class="composer">
+      <input id="q" type="text" autocomplete="off" placeholder="예) 2022학번 컴퓨터소프트웨어공학과 졸업 총점은?">
+      <button type="submit">보내기</button>
+    </form>
+  </main>
+
+  <!-- 2. 졸업 판정 -->
+  <main id="tab-check" class="panel">
+    <div id="checkUnsupported" class="notice" hidden></div>
+    <div id="checkBody">
+      <section class="card">
+        <h2>① 대학공통 필수 이수 항목 <button class="link" id="allCommon" type="button">모두 이수</button> <button class="link" id="noCommon" type="button">모두 해제</button></h2>
+        <div id="commonBox" class="grid2"></div>
+      </section>
+      <section class="card">
+        <h2>② 수강한 과목 리스트</h2>
+        <p class="hint">한 줄에 한 과목(또는 쉼표로 구분)으로 붙여넣으세요. 아래 버튼을 누르면 과목이 추가/삭제됩니다.</p>
+        <div id="courseChips" class="chips inline"></div>
+        <textarea id="courses" rows="5" placeholder="캡스톤디자인&#10;전공영어기초&#10;예비창업설계"></textarea>
+      </section>
+      <section class="card">
+        <h2>③ 참여한 비교과 활동</h2>
+        <h3>비교과 지정</h3>
+        <div id="desigBox" class="grid2"></div>
+        <h3>비교과 미지정</h3>
+        <div id="freeBox" class="grid2"></div>
+      </section>
+      <section id="result" class="card result"></section>
+    </div>
+  </main>
+
+  <!-- 3. 문서 -->
+  <main id="tab-docs" class="panel">
+    <section class="card">
+      <h2>기본 탑재 문서</h2>
+      <ul id="docList" class="doclist"></ul>
+    </section>
+    <section class="card">
+      <h2>안내 문서 추가하기 <span class="badge">내 브라우저에서만 사용</span></h2>
+      <p class="hint">PDF·TXT·MD 파일을 추가하면 챗봇이 함께 검색합니다. 파일은 서버로 올라가지 않으며, 새로고침하면 사라집니다.
+        영구 반영은 README의 <code>docs/</code> 폴더 + <code>python3 build.py</code> 방법을 쓰세요.</p>
+      <input id="file" type="file" accept=".pdf,.txt,.md" multiple>
+      <details>
+        <summary>텍스트 직접 붙여넣기</summary>
+        <input id="pasteName" type="text" placeholder="문서 이름 (예: 졸업사정 공지)">
+        <textarea id="pasteText" rows="5" placeholder="안내 문서 내용을 붙여넣으세요"></textarea>
+        <button id="pasteAdd" type="button">추가</button>
+      </details>
+      <div id="addedMsg" class="hint"></div>
+    </section>
+  </main>
+
+  <footer>
+    ⚠️ 이 도구는 학과 기준 PDF를 바탕으로 한 <b>참고용</b>입니다. 최종 확인은 차세대 종합정보시스템 → 개인별졸업진도관리 또는 多Dream비교과센터(향설 1관 RC306호)에서 하세요.
+  </footer>
+</div>
+
+<script>const KB = {{KB}};</script>
+<script>{{ENGINE}}</script>
+<script>{{CHECKER}}</script>
+<script>{{APP}}</script>
+</body>
+</html>
